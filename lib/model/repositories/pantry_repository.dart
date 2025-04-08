@@ -1,6 +1,5 @@
 class PantryRepository{
 
-
   /// The [newItem] parameter is a [PantryItem] object containing
   /// all the details of the item to be added.
   /// Only 'name' is required, and order does not matter.
@@ -11,18 +10,20 @@ class PantryRepository{
   /// repository.addItem(apple);
   /// ```
   Future<void> addItem(PantryItem newItem) async {
-    print('Successfully added $newItem')
+    print('Successfully added $newItem');
   }
 
 
   /// Returns a list of all pantry items.
   Future<List<PantryItem>> getAllItems() async {
+    print('Successfully called the updateItem-method and returned an empty list.');
     return [];
   }
 
 
   /// Returns a specific pantry item.
   Future<PantryItem> getItem(String name) async {
+    print('Successfully called the getItem-method for name: $name');
     return PantryItem(name: name, expirationDate: DateTime.now());
   }
 
