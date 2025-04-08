@@ -9,8 +9,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _isNotificationsEnabled = true;
-  bool _isDarkMode = false;
-  bool _isLocationEnabled = true;
 
   // List to store family members
   List<Map<String, String>> _familyMembers = [];
