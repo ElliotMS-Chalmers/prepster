@@ -8,24 +8,24 @@ class SettingsRepository {
   SettingsRepository(this._settingsService);
 
   // Settings keys
-  static const String languageKey = 'language';
-  static const String notificationKey = 'notification';
-  static const String notifyDaysBeforeKey = 'notifyDaysBefore';
-  static const String householdKey = 'household';
+  static const String _languageKey = 'language';
+  static const String _notificationKey = 'notification';
+  static const String _notifyDaysBeforeKey = 'notifyDaysBefore';
+  static const String _householdKey = 'household';
 
   // Getters
   Future<String> getLanguage() async {
-    return (await _settingsService.getValue<String>(languageKey)) ??
+    return (await _settingsService.getValue<String>(_languageKey)) ??
         DEFAULT_LANGUAGE;
   }
 
   Future<bool> getNotifications() async {
-    return (await _settingsService.getValue<bool>(notificationKey)) ??
+    return (await _settingsService.getValue<bool>(_notificationKey)) ??
         DEFAULT_NOTIFICATIONS;
   }
 
   Future<String> getNotifyDaysBefore() async {
-    final intValue = await _settingsService.getValue<int>(notifyDaysBeforeKey);
+    final intValue = await _settingsService.getValue<int>(_notifyDaysBeforeKey);
     return intValue?.toString() ?? DEFAULT_NOTIFY_DAYS_BEFORE;
   }
 
@@ -35,15 +35,15 @@ class SettingsRepository {
 
   // Setters
   Future<void> setLanguage(String value) async {
-    await _settingsService.setValue(languageKey, value);
+    await _settingsService.setValue(_languageKey, value);
   }
 
   Future<void> setNotifications(bool value) async {
-    await _settingsService.setValue(notificationKey, value);
+    await _settingsService.setValue(_notificationKey, value);
   }
 
   Future<void> setNotifyDaysBefore(int value) async {
-    await _settingsService.setValue(notifyDaysBeforeKey, value);
+    await _settingsService.setValue(_notifyDaysBeforeKey, value);
   }
 
   Future<String> addHouseholdMember(
@@ -60,13 +60,13 @@ class SettingsRepository {
       'sex': sex,
     };
     household.add(newMember);
-    await _settingsService.setValue(householdKey, household);
+    await _settingsService.setValue(_householdKey, household);
     return newMember['id'] as String;
   }
 
   Future<void> deleteHouseholdMember(String uuid) async {
     final household = await getHousehold();
     household.removeWhere((member) => member['id'] == uuid);
-    await _settingsService.setValue(householdKey, household);
+    await _settingsService.setValue(_householdKey, household);
   }
 }
