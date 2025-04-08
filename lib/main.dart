@@ -28,9 +28,9 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Home Page'),
     );
   }
 }
@@ -53,6 +53,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
+
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
@@ -66,6 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +120,18 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Pantry'),
+          BottomNavigationBarItem(icon: Icon(Icons.medication), label: 'Medical'),
+          BottomNavigationBarItem(icon: Icon(Icons.build), label: "Equipment"),
+          BottomNavigationBarItem(icon: Icon(Icons.info), label: "Resources"),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
+        ],
+
+
+      ),
     );
   }
 }
