@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 
-
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool _isSwitched = true; // Default value for the switch (true or false)
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +16,15 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Settings Page'),
       ),
-      body: const Center(
-        child: Text('Here are your settings!', style: TextStyle(fontSize: 24)),
+      body: Center(
+        child: Switch(
+          value: _isSwitched,  // Bind the switch to the _isSwitched variable
+          onChanged: (bool value) {
+            setState(() {
+              _isSwitched = value;  // Update the state when the switch is toggled
+            });
+          },
+        ),
       ),
     );
   }
