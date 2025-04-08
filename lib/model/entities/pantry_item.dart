@@ -1,7 +1,25 @@
+import 'package:json_annotation/json_annotation.dart';
+
 /// This class represents an item in the pantry.
 ///
 /// The [categories] property uses the [FoodCategory] enum
 /// to define the different types of food.
+
+part 'pantry_item.g.dart';
+
+// ##### IMPORTANT #####
+// ##### IMPORTANT #####
+// ##### IMPORTANT #####
+
+// If you add any properties or change existing,
+// you must run this terminal-command to regenerate the json-handler:
+// "dart run build_runner build"
+
+// ##### IMPORTANT #####
+// ##### IMPORTANT #####
+// ##### IMPORTANT #####
+
+@JsonSerializable()
 class PantryItem {
 
   /// Required: Name of the pantry item.
@@ -36,6 +54,10 @@ class PantryItem {
     this.excludeFromDateTracker,
     this.excludeFromCaloriesTracker
   });
+
+  factory PantryItem.fromJson(Map<String, dynamic> json) => _$PantryItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PantryItemToJson(this);
 
 }
 
