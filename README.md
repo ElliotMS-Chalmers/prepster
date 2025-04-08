@@ -1,16 +1,34 @@
-# prepster
+# Prepster
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+    prepster/
+    ├── android/                     # Android-specific configs
+    ├── assets/                      # Images, icons and other assets
+    ├── lib/
+    │   ├── main.dart                # Entry point
+    │   ├── ui/                      # UI Layer
+    │   │   ├── pages/               # Pages (screens) of the app
+    │   │   ├── viewmodels/          # ViewModels for each page
+    │   │   └── widgets/             # Reusable UI components
+    │   ├── model/                   # Model Layer
+    │   │   ├── entities/            # Data entities/models
+    │   │   ├── repositories/        # Repositories
+    │   │   └── services/            # Services
+    │   └── utils/                   # Utilities
+    │       ├── constants/           # Constants for reuse
+    │       └── helpers/             # Helper functions
+    ├── test/                        # Tests
+    │   ├── ui/
+    │   │   ├── pages/
+    │   │   ├── viewmodels/
+    │   │   └── widgets/
+    │   ├── model/
+    │   │   ├── entities/
+    │   │   ├── repositories/
+    │   │   └── services/
+    │   └── utils/
+    └── pubspec.yaml                # Dependencies
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
