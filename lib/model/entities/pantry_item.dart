@@ -46,13 +46,17 @@ class PantryItem {
   /// ..."How many days will my food last me?"-tracker.
   bool? excludeFromCaloriesTracker;
 
+  /// Optional: How much does the item weigh in kilograms.
+  double? weightKg;
+
   PantryItem({
     required this.name,
     this.expirationDate,
     this.calories100g,
     this.categories,
     this.excludeFromDateTracker,
-    this.excludeFromCaloriesTracker
+    this.excludeFromCaloriesTracker,
+    this.weightKg
   });
 
   factory PantryItem.fromJson(Map<String, dynamic> json) => _$PantryItemFromJson(json);
