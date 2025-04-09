@@ -19,6 +19,7 @@ PantryItem _$PantryItemFromJson(Map<String, dynamic> json) => PantryItem(
           .toList(),
   excludeFromDateTracker: json['excludeFromDateTracker'] as bool?,
   excludeFromCaloriesTracker: json['excludeFromCaloriesTracker'] as bool?,
+  weightKg: (json['weightKg'] as num?)?.toDouble(),
 );
 
 Map<String, dynamic> _$PantryItemToJson(PantryItem instance) =>
@@ -30,6 +31,7 @@ Map<String, dynamic> _$PantryItemToJson(PantryItem instance) =>
           instance.categories?.map((e) => _$FoodCategoryEnumMap[e]!).toList(),
       'excludeFromDateTracker': instance.excludeFromDateTracker,
       'excludeFromCaloriesTracker': instance.excludeFromCaloriesTracker,
+      'weightKg': instance.weightKg,
     };
 
 const _$FoodCategoryEnumMap = {
