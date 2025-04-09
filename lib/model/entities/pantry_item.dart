@@ -63,6 +63,17 @@ class PantryItem {
 
   Map<String, dynamic> toJson() => _$PantryItemToJson(this);
 
+  // This toString() is for debugging purposes only.
+  // Otherwise methods like getAllItems() will only print a list like this:
+  // [Instance of 'PantryItem', Instance of 'PantryItem']
+  // With this, it instead prints:
+  // [PantryItem(name: Apple, calories100g: 50.0, expirationDate: null),
+  // PantryItem(name: Banana, calories100g: 96.0, expirationDate: null)]
+  @override
+  String toString() {
+    return 'PantryItem(name: $name, calories100g: $calories100g, expirationDate: $expirationDate)';
+  }
+
 }
 
 enum FoodCategory {
