@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:prepster/model/entities/pantry_item.dart';
 
-class PantryRepository{
+class PantryRepository extends ChangeNotifier {
 
   /// The [newItem] parameter is a [PantryItem] object containing
   /// all the details of the item to be added.
@@ -11,22 +13,28 @@ class PantryRepository{
   /// final apple = PantryItem(name: 'Apple', expirationDate: DateTime.now().add(Duration(days: 7)));
   /// repository.addItem(apple);
   /// ```
+
+  List<PantryItem> pantryItems = [];
+
   Future<void> addItem(PantryItem newItem) async {
     print('Successfully added $newItem');
+    pantryItems.add(newItem);
+
+    notifyListeners();
   }
 
 
   /// Returns a list of all pantry items.
   Future<List<PantryItem>> getAllItems() async {
     print('Successfully called the updateItem-method and returned an empty list.');
-    return [];
+    return pantryItems;
   }
 
 
   /// Returns a specific pantry item.
-  Future<PantryItem> getItem(String name) async {
-    print('Successfully called the getItem-method for name: $name');
-    return PantryItem(name: name, expirationDate: DateTime.now());
+  Future<PantryItem> getItem(int index) async {
+    print('Successfully called the getItem-method for index: $index');
+    return pantryItems[index];
   }
 
 
@@ -45,12 +53,15 @@ class PantryRepository{
       bool? excludeFromDateTracker,
       bool? excludeFromCaloriesTracker}) async {
     print('Successfully called the updateItem-method for name: $name');
+    notifyListeners();
   }
 
 
-  /// Deletes a specific pantry item identified by [name].
-  Future<void> deleteItem(String name) async {
-    print('Successfully called the deleteItem-method and parsed\n the name: $name');
+  /// Deletes a specific pantry item identified by index.
+  Future<void> deleteItem(int index) async {
+    print('Successfully called the deleteItem-method and parsed\n the index: $index');
+    pantryItems.removeAt(index);
+    notifyListeners();
   }
 
 }

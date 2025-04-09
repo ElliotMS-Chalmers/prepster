@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+
+import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/repositories/pantry_repository.dart';
 
 // Test for dummy-repository
@@ -32,11 +34,10 @@ void main() {
 
     // Checks if the returned item is a PantryItem
     test('Calling getItem with a name returns a PantryItem and prints a message', () async {
-      const itemName = 'Apple';
-      final item = await pantryRepo.getItem(itemName);
+      pantryRepo.addItem(PantryItem(name: "Apple"));
+      final item = await pantryRepo.getItem(0);
       expect(item, isA<PantryItem>());
-      expect(item.name, itemName);
-      expect(item.expirationDate, isNotNull); // The dummy returns DateTime.now()
+      expect(item.name, "Apple");
     });
 
 
@@ -51,8 +52,13 @@ void main() {
 
     // Test only checks if the method completes, since there's nothing to delete.
     test('Calling deleteItem completes without error', () async {
-      const itemName = 'Orange';
-      await pantryRepo.deleteItem(itemName);
+      const itemIndex = 0;
+      PantryItem item1 = PantryItem(name: "test1");
+      PantryItem item2 = PantryItem(name: "test2");
+      pantryRepo.addItem(item1);
+      pantryRepo.addItem(item2);
+      await pantryRepo.deleteItem(0);
+      expect(await pantryRepo.getItem(itemIndex), item2);
     });
   });
 }
