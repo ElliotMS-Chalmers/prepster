@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
 
   void _addPantryItem(String name, String calories100g, String weightKg, DateTime? date) {
     final pantryRepository = Provider.of<PantryRepository>(context, listen: false);
-    pantryRepository.addItem(PantryItem(name: name, calories100g: double.parse(calories100g), weightKg: double.parse(weightKg), expirationDate: date));
+    pantryRepository.addItem(name: name, calories100g: double.parse(calories100g), weightKg: double.parse(weightKg), expirationDate: date);
   }
 
   void _displayItemPopup() {

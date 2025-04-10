@@ -7,6 +7,7 @@ part of 'pantry_item.dart';
 // **************************************************************************
 
 PantryItem _$PantryItemFromJson(Map<String, dynamic> json) => PantryItem(
+  id: json['id'] as String,
   name: json['name'] as String,
   expirationDate:
       json['expirationDate'] == null
@@ -24,6 +25,7 @@ PantryItem _$PantryItemFromJson(Map<String, dynamic> json) => PantryItem(
 
 Map<String, dynamic> _$PantryItemToJson(PantryItem instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'expirationDate': instance.expirationDate?.toIso8601String(),
       'calories100g': instance.calories100g,

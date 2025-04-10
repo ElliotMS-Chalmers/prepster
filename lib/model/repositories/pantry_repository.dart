@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
+import 'package:uuid/uuid.dart';
 
 class PantryRepository extends ChangeNotifier {
 
@@ -16,22 +17,46 @@ class PantryRepository extends ChangeNotifier {
 
 
   final JsonStorageService _storageService = JsonStorageService();
+  final _uuid = const Uuid();
   List<PantryItem> pantryItems = [];
 
-  Future<void> addItem(PantryItem newItem) async {
-    await _storageService.addItem(newItem); // Call the service to add
-    print('Successfully added $newItem');
+
+  Future<void> addItem({
+    required String name,
+    DateTime? expirationDate,
+    double? calories100g,
+    List<FoodCategory>? categories,
+    bool? excludeFromDateTracker,
+    bool? excludeFromCaloriesTracker,
+    double? weightKg,
+  }) async {
+
+    final itemId = _uuid.v4();
+
+    PantryItem newItem = PantryItem(
+      id: itemId,
+      name: name,
+      expirationDate: expirationDate,
+      calories100g: calories100g,
+      categories: categories,
+      excludeFromDateTracker: excludeFromDateTracker,
+      excludeFromCaloriesTracker: excludeFromCaloriesTracker,
+      weightKg: weightKg,
+    );
+    //TODO: Use this instead of temporary
+    await _storageService.addItem(newItem); // Proper service-call
+    //TODO: Temporary until service is fully implemented
     pantryItems.add(newItem);
-
+    //TODO: To remove, listeners should be in the future viewmodel
     notifyListeners();
+    print('Successfully added $newItem');
   }
-
 
   /// Returns a list of all pantry items.
   Future<List<PantryItem>> getAllItems() async {
-    pantryItems = await _storageService.getAllItems();
-    print('Successfully called the updateItem-method and returned an empty list.');
-    return pantryItems;
+    final List<PantryItem> pantryList = await _storageService.getAllItems();
+    print('Successfully called the getAllItems-method and returned a map.');
+    return pantryList;
   }
 
 
@@ -60,6 +85,26 @@ class PantryRepository extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteItem<T>(T itemToDelete) async {
+    if (itemToDelete is String) {
+      final result = await _storageService.deleteItem(itemToDelete);
+      print(result);
+      pantryItems.removeWhere((item) => item.id == itemToDelete);
+      notifyListeners();
+    }
+    if (itemToDelete is int){
+      print('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
+      pantryItems.removeAt(itemToDelete);
+      notifyListeners();
+    }
+  }
+  /*
+  Future<void> deleteItem(String idToDelete) async {
+    final result = await _storageService.deleteItem(idToDelete);
+    print(result);
+    pantryItems.removeWhere((item) => item.id == idToDelete);
+    notifyListeners();
+  }
 
   /// Deletes a specific pantry item identified by index.
   Future<void> deleteItem(int index) async {
@@ -67,5 +112,7 @@ class PantryRepository extends ChangeNotifier {
     pantryItems.removeAt(index);
     notifyListeners();
   }
+  */
+
 
 }

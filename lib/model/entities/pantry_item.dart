@@ -22,6 +22,9 @@ part 'pantry_item.g.dart';
 @JsonSerializable()
 class PantryItem {
 
+  // id will be generated at creation using Uuid().
+  String id;
+
   /// Required: Name of the pantry item.
   String name;
 
@@ -50,6 +53,7 @@ class PantryItem {
   double? weightKg;
 
   PantryItem({
+    required this.id,
     required this.name,
     this.expirationDate,
     this.calories100g,
