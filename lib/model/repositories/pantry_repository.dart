@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
 
-class PantryRepository extends ChangeNotifier {
+class PantryRepository {
 
   /// The [newItem] parameter is a [PantryItem] object containing
   /// all the details of the item to be added.
@@ -22,8 +22,6 @@ class PantryRepository extends ChangeNotifier {
     await _storageService.addItem(newItem); // Call the service to add
     print('Successfully added $newItem');
     pantryItems.add(newItem);
-
-    notifyListeners();
   }
 
 
@@ -57,7 +55,6 @@ class PantryRepository extends ChangeNotifier {
       bool? excludeFromDateTracker,
       bool? excludeFromCaloriesTracker}) async {
     print('Successfully called the updateItem-method for name: $name');
-    notifyListeners();
   }
 
 
@@ -65,7 +62,6 @@ class PantryRepository extends ChangeNotifier {
   Future<void> deleteItem(int index) async {
     print('Successfully called the deleteItem-method and parsed\n the index: $index');
     pantryItems.removeAt(index);
-    notifyListeners();
   }
 
 }

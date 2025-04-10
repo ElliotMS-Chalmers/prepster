@@ -46,3 +46,4 @@ app.*.map.json
 
 .metadata
 pubspec.lock
+devtools_options.yaml
