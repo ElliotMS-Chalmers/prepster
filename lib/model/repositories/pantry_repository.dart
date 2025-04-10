@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
-
+import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
+import 'package:prepster/model/services/json_storage_service.dart';
 
 class PantryRepository extends ChangeNotifier {
 
@@ -14,9 +14,12 @@ class PantryRepository extends ChangeNotifier {
   /// repository.addItem(apple);
   /// ```
 
+
+  final JsonStorageService _storageService = JsonStorageService();
   List<PantryItem> pantryItems = [];
 
   Future<void> addItem(PantryItem newItem) async {
+    await _storageService.addItem(newItem); // Call the service to add
     print('Successfully added $newItem');
     pantryItems.add(newItem);
 
@@ -26,6 +29,7 @@ class PantryRepository extends ChangeNotifier {
 
   /// Returns a list of all pantry items.
   Future<List<PantryItem>> getAllItems() async {
+    pantryItems = await _storageService.getAllItems();
     print('Successfully called the updateItem-method and returned an empty list.');
     return pantryItems;
   }

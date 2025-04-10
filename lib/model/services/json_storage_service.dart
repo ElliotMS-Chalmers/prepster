@@ -2,29 +2,41 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class JsonStorageService {
   // Define the path to our test JSON file
-  final String _testFilePath = path.join(
-    Directory.current.path,
-    'test',
-    'model',
-    'database',
-    'pantry_data_test.json',
-  );
+  // Define the name of our pantry data file
+  final String _pantryFileName = 'pantry_data.json';
+
+  // Method to get the path to our pantry data file in the app's documents directory
+  Future<File> _getPantryFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = path.join(directory.path, _pantryFileName);
+    return File(filePath);
+  }
 
   Future<List<dynamic>> _readPantryList() async {
-    final File testFile = File(_testFilePath);
-    String contents = await testFile.readAsString();
-    if (contents.isEmpty) {
+    final file = await _getPantryFile();
+    try {
+      final contents = await file.readAsString();
+      if (contents.isEmpty) {
+        return [];
+      }
+      return jsonDecode(contents);
+    } catch (e) {
+      // If the file doesn't exist yet, return an empty list
       return [];
     }
-    return jsonDecode(contents);
   }
 
   Future<void> _savePantryList(List<dynamic> pantryList) async {
-    final File testFile = File(_testFilePath);
-    await testFile.writeAsString(jsonEncode(pantryList));
+    final file = await _getPantryFile();
+    // Create the file and any necessary parent directories
+    if (!await file.exists()) {
+      await file.create(recursive: true);
+    }
+    await file.writeAsString(jsonEncode(pantryList));
   }
 
   Future<void> addItem(PantryItem newItem) async {
@@ -47,7 +59,7 @@ class JsonStorageService {
       Map<String, dynamic> newItemJson = newItem.toJson();
       pantryList.add(newItemJson);
       await _savePantryList(pantryList);
-      print('Item "${newItem.name}" added to $_testFilePath');
+      print('Item "${newItem.name}" added to $_pantryFileName');
     }
   }
 
