@@ -3,7 +3,7 @@ import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
 import 'package:uuid/uuid.dart';
 
-class PantryRepository extends ChangeNotifier {
+class PantryRepository {
 
   /// The [newItem] parameter is a [PantryItem] object containing
   /// all the details of the item to be added.
@@ -47,8 +47,6 @@ class PantryRepository extends ChangeNotifier {
     await _storageService.addItem(newItem); // Proper service-call
     //TODO: Temporary until service is fully implemented
     pantryItems.add(newItem);
-    //TODO: To remove, listeners should be in the future viewmodel
-    notifyListeners();
     print('Successfully added $newItem');
   }
 
@@ -82,7 +80,6 @@ class PantryRepository extends ChangeNotifier {
       bool? excludeFromDateTracker,
       bool? excludeFromCaloriesTracker}) async {
     print('Successfully called the updateItem-method for name: $name');
-    notifyListeners();
   }
 
   Future<void> deleteItem<T>(T itemToDelete) async {
@@ -90,29 +87,10 @@ class PantryRepository extends ChangeNotifier {
       final result = await _storageService.deleteItem(itemToDelete);
       print(result);
       pantryItems.removeWhere((item) => item.id == itemToDelete);
-      notifyListeners();
     }
     if (itemToDelete is int){
       print('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
       pantryItems.removeAt(itemToDelete);
-      notifyListeners();
     }
   }
-  /*
-  Future<void> deleteItem(String idToDelete) async {
-    final result = await _storageService.deleteItem(idToDelete);
-    print(result);
-    pantryItems.removeWhere((item) => item.id == idToDelete);
-    notifyListeners();
-  }
-
-  /// Deletes a specific pantry item identified by index.
-  Future<void> deleteItem(int index) async {
-    print('Successfully called the deleteItem-method and parsed\n the index: $index');
-    pantryItems.removeAt(index);
-    notifyListeners();
-  }
-  */
-
-
 }
