@@ -41,7 +41,7 @@ class PantryViewModel extends ChangeNotifier {
   Future<void> deleteItem(String itemId) async {
     await _repository.deleteItem(itemId);
     //_items.removeAt(itemId);
-    notifyListeners();
+    //notifyListeners();
     await _loadItems();
   }
 }
