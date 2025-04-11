@@ -11,8 +11,7 @@ class PantryRepository {
   ///
   /// Example of how to create a PantryItem:
   /// ```dart
-  /// final apple = PantryItem(name: 'Apple', expirationDate: DateTime.now().add(Duration(days: 7)));
-  /// repository.addItem(apple);
+  /// pantry_repository.addItem(name: 'Apple', expirationDate: DateTime.now().add(Duration(days: 7)));
   /// ```
 
 

@@ -4,13 +4,12 @@ import '../../model/entities/pantry_item.dart';
 
 class PantryItemListItem extends StatelessWidget {
   final PantryItem item;
-  final int index;
-  final void Function(int index) onDelete;
+  // final int index; // No longer needed for deleting
+  final void Function(String itemId) onDelete;
 
   const PantryItemListItem({
     super.key,
     required this.item,
-    required this.index,
     required this.onDelete,
   });
 
@@ -19,13 +18,13 @@ class PantryItemListItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Dismissible(
-      key: Key(item.name),
+      key: Key(item.id), // Use item.id as the key for Dismissible
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Deleted ${item.name} from pantry')),
         );
-        onDelete(index);
+        onDelete(item.id); // Pass item.id instead of in onDelete
       },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 5),

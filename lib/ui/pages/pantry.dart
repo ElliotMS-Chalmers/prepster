@@ -35,7 +35,7 @@ class _PantryPageState extends State<PantryPage> {
               PantryItem item = items[index];
               return PantryItemListItem(
                 item: item,
-                index: index,
+                //index: index,
                 onDelete: (i) => viewModel.deleteItem(i),
               );
             },

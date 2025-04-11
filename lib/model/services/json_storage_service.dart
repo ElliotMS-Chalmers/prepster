@@ -4,98 +4,76 @@ import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
+// File path for json on emulated device:
+// /data/data/com.example.prepster/app_flutter/pantry_data.json
+
 class JsonStorageService {
-  // Define the path to our test JSON file
-  // Define the name of our pantry data file
+
   final String _pantryFileName = 'pantry_data.json';
 
-  // Method to get the path to our pantry data file in the app's documents directory
   Future<File> _getPantryFile() async {
     final directory = await getApplicationDocumentsDirectory();
     final filePath = path.join(directory.path, _pantryFileName);
     return File(filePath);
   }
 
-  Future<List<dynamic>> _readPantryList() async {
+  Future<Map<String, dynamic>> _readPantryMap() async {
     final file = await _getPantryFile();
     try {
       final contents = await file.readAsString();
       if (contents.isEmpty) {
-        return [];
+        return {}; // Return an empty map if the file is empty
       }
-      return jsonDecode(contents);
+      return jsonDecode(contents) as Map<String, dynamic>; // Decode as a map
     } catch (e) {
-      // If the file doesn't exist yet, return an empty list
-      return [];
+      // If the file doesn't exist yet, return an empty map
+      return {};
     }
   }
 
-  Future<void> _savePantryList(List<dynamic> pantryList) async {
+  Future<void> _savePantryMap(Map<String, dynamic> pantryMap) async {
     final file = await _getPantryFile();
-    // Create the file and any necessary parent directories
     if (!await file.exists()) {
       await file.create(recursive: true);
     }
-    await file.writeAsString(jsonEncode(pantryList));
+    await file.writeAsString(const JsonEncoder.withIndent('  ').convert(pantryMap));
   }
 
   Future<void> addItem(PantryItem newItem) async {
-    List<dynamic> pantryList = await _readPantryList();
-
-    // Check if an item with the same name already exists
-    bool alreadyExists = false;
-    for (var item in pantryList) {
-      if (item['name'] == newItem.name) {
-        alreadyExists = true;
-        break;
-      }
-    }
-
-    if (alreadyExists) {
-      print('Item with name "${newItem.name}" already exists!');
-      return;
-    }else {
-      // If the item doesn't exist, then add it
-      Map<String, dynamic> newItemJson = newItem.toJson();
-      pantryList.add(newItemJson);
-      await _savePantryList(pantryList);
-      print('Item "${newItem.name}" added to $_pantryFileName');
-    }
-  }
-
-  Future<PantryItem?> getItem(String name) async {
-    List<dynamic> pantryList = await _readPantryList();
-
-    for (var itemJson in pantryList) {
-      if (itemJson['name'] == name) {
-        return PantryItem.fromJson(itemJson);
-      }
-    }
-
-    return null;
+    final pantryMap = await _readPantryMap();
+    final newItemJson = newItem.toJson(); // Convert PantryItem to JSON
+    pantryMap[newItem.id] = newItemJson; // Add to the map with UUID as key
+    await _savePantryMap(pantryMap);
+    print('Item "${newItem.name}" with ID "${newItem.id}" added to $_pantryFileName');
   }
 
   Future<List<PantryItem>> getAllItems() async {
-    List<dynamic> jsonData = await _readPantryList();
-    return jsonData.map((itemJson) => PantryItem.fromJson(itemJson)).toList();
+    final pantryMap = await _readPantryMap();
+    final List<PantryItem> allItemsList = pantryMap.values
+        .map((itemJson) => PantryItem.fromJson(itemJson as Map<String, dynamic>))
+        .toList();
+    return allItemsList;
   }
 
-  Future<String> deleteItem(PantryItem itemToDelete) async {
-    List<dynamic> pantryList = await _readPantryList();
-    int indexToDelete = -1;
-    for (int i = 0; i < pantryList.length; i++) {
-      if (pantryList[i]['name'] == itemToDelete.name) {
-        indexToDelete = i;
-        break;
-      }
+  Future<PantryItem?> getItem(String itemId) async {
+    final pantryMap = await _readPantryMap();
+    final itemJson = pantryMap[itemId];
+    if (itemJson != null) {
+      return PantryItem.fromJson(itemJson);
     }
+    return null;
+  }
 
-    if (indexToDelete == -1) {
-      return 'Item with name "${itemToDelete.name}" does not exist!';
+  Future<String> deleteItem(String idToDelete) async {
+    final pantryMap = await _readPantryMap();
+    if (pantryMap.containsKey(idToDelete)) {
+      // Only necessary to get the itemName for the success message
+      final itemName = pantryMap[idToDelete]['name'];
+      pantryMap.remove(idToDelete);
+      await _savePantryMap(pantryMap);
+      return 'Item "$itemName" with ID "$idToDelete" deleted successfully!';
+    } else {
+      return 'Item with ID "$idToDelete" does not exist!';
     }
-
-    pantryList.removeAt(indexToDelete);
-    await _savePantryList(pantryList);
-    return 'Item "${itemToDelete.name}" deleted successfully!';
   }
 }
