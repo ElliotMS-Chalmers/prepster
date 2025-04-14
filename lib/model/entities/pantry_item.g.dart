@@ -9,6 +9,7 @@ part of 'pantry_item.dart';
 PantryItem _$PantryItemFromJson(Map<String, dynamic> json) => PantryItem(
   id: json['id'] as String,
   name: json['name'] as String,
+  amount: (json['amount'] as num?)?.toInt(),
   expirationDate:
       json['expirationDate'] == null
           ? null
@@ -27,13 +28,14 @@ Map<String, dynamic> _$PantryItemToJson(PantryItem instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
+      'amount': instance.amount,
       'expirationDate': instance.expirationDate?.toIso8601String(),
       'calories100g': instance.calories100g,
+      'weightKg': instance.weightKg,
       'categories':
           instance.categories?.map((e) => _$FoodCategoryEnumMap[e]!).toList(),
       'excludeFromDateTracker': instance.excludeFromDateTracker,
       'excludeFromCaloriesTracker': instance.excludeFromCaloriesTracker,
-      'weightKg': instance.weightKg,
     };
 
 const _$FoodCategoryEnumMap = {

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
 import 'package:uuid/uuid.dart';
@@ -23,30 +22,54 @@ class PantryRepository {
   Future<void> addItem({
     required String name,
     DateTime? expirationDate,
+    int? amount,
     double? calories100g,
+    double? weightKg,
     List<FoodCategory>? categories,
     bool? excludeFromDateTracker,
-    bool? excludeFromCaloriesTracker,
-    double? weightKg,
+    bool? excludeFromCaloriesTracker
   }) async {
 
     final itemId = _uuid.v4();
 
+    if (name.length > 50){
+      throw ArgumentError('Name cannot be longer than 50 characters');
+    }
+
+    amount ??= 1;
+
+    if (expirationDate == null){
+      excludeFromDateTracker = true;
+    }
+
+    if (calories100g == null){
+      excludeFromCaloriesTracker = true;
+    }
+
+    // The ??= replaces if-statements to check for null-values
+    // If the value isn't null then the value won't be changed
+    if (weightKg != null && weightKg.isNegative){
+      throw ArgumentError('Weight cannot be negative');
+    }
+
+    categories ??= <FoodCategory>[];
+    excludeFromDateTracker ??= false;
+    excludeFromCaloriesTracker ??= false;
+
+
     PantryItem newItem = PantryItem(
       id: itemId,
       name: name,
+      amount: amount,
       expirationDate: expirationDate,
       calories100g: calories100g,
+      weightKg: weightKg,
       categories: categories,
       excludeFromDateTracker: excludeFromDateTracker,
-      excludeFromCaloriesTracker: excludeFromCaloriesTracker,
-      weightKg: weightKg,
+      excludeFromCaloriesTracker: excludeFromCaloriesTracker
     );
-    //TODO: Use this instead of temporary
-    await _storageService.addItem(newItem); // Proper service-call
-    //TODO: Temporary until service is fully implemented
-    pantryItems.add(newItem);
-    print('Successfully added $newItem');
+    //TODO: Error handling
+    await _storageService.addItem(newItem);
   }
 
   /// Returns a list of all pantry items.
