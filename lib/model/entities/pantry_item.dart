@@ -28,11 +28,16 @@ class PantryItem {
   /// Required: Name of the pantry item.
   String name;
 
+  int? amount;
+
   /// Optional: Expiration date.
   DateTime? expirationDate;
 
   /// Optional: How many calories does 100g of an item contain.
   double? calories100g;
+
+  /// Optional: How much does the item weigh in kilograms.
+  double? weightKg;
 
   /// Optional:
   /// A list of categories this item belongs to, using the [FoodCategory] enum.
@@ -49,12 +54,10 @@ class PantryItem {
   /// ..."How many days will my food last me?"-tracker.
   bool? excludeFromCaloriesTracker;
 
-  /// Optional: How much does the item weigh in kilograms.
-  double? weightKg;
-
   PantryItem({
     required this.id,
     required this.name,
+    this.amount,
     this.expirationDate,
     this.calories100g,
     this.categories,
