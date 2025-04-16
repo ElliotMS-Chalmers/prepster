@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 import 'package:provider/provider.dart';
 
 import 'model/repositories/pantry_repository.dart';
-import 'model/entities/pantry_item.dart';
 
 import 'ui/pages/equipment.dart';
 import 'ui/pages/medical.dart';
 import 'ui/pages/pantry.dart';
 import 'ui/pages/resources.dart';
 import 'ui/pages/settings.dart';
-
 import 'ui/widgets/dialog_popup.dart';
 
 void main() {
+  Logger.level = Level.all;
   runApp(const App());
 }
 
@@ -60,12 +60,6 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-  /*
-    void _addPantryItem(String name, String calories100g, String weightKg, DateTime? date) {
-    final pantryRepository = Provider.of<PantryRepository>(context, listen: false);
-    pantryRepository.addItem(name: name, calories100g: double.parse(calories100g), weightKg: double.parse(weightKg), expirationDate: date);
-  }
-  */
 
   void _addPantryItem(String name, String calories100g, String weightKg, DateTime? date) {
     final pantryViewModel = Provider.of<PantryViewModel>(context, listen: false);

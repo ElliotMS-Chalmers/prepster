@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:prepster/utils/logger.dart';
 
 // File path for json on emulated device:
 // /data/data/com.example.prepster/app_flutter/pantry_data.json
@@ -44,7 +45,7 @@ class JsonStorageService {
     final newItemJson = newItem.toJson(); // Convert PantryItem to JSON
     pantryMap[newItem.id] = newItemJson; // Add to the map with UUID as key
     await _savePantryMap(pantryMap);
-    print('Item "${newItem.name}" with ID "${newItem.id}" added to $_pantryFileName');
+    logger.i('Item "${newItem.name}" with ID "${newItem.id}" added to $_pantryFileName');
   }
 
   Future<List<PantryItem>> getAllItems() async {
