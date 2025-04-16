@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/ui/pages/dashboard.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'model/repositories/pantry_repository.dart';
@@ -14,7 +16,12 @@ import 'ui/pages/settings.dart';
 import 'ui/widgets/dialog_popup.dart';
 
 void main() {
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -23,11 +30,13 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Prepster',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange, brightness: Brightness.light),
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: themeProvider.themeMode,
       home: ChangeNotifierProvider(
         create: (context) => PantryViewModel(PantryRepository()),
         child: const HomePage(title: 'Home Page'),
@@ -48,6 +57,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
   final _pageOptions = [
+    DashboardPage(),
     PantryPage(),
     MedicalPage(),
     EquipmentPage(),
@@ -100,6 +110,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Pantry'),
           BottomNavigationBarItem(icon: Icon(Icons.medication), label: 'Medical'),
           BottomNavigationBarItem(icon: Icon(Icons.build), label: "Equipment"),
