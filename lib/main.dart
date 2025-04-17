@@ -15,6 +15,7 @@ import 'package:prepster/ui/pages/resources.dart';
 import 'package:prepster/ui/pages/settings.dart';
 import 'package:prepster/ui/widgets/dialog_popup.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/ui/viewmodels/settings_view_model.dart';
 
 import 'package:prepster/utils/theme_provider.dart';
 import 'package:prepster/utils/logger.dart';
@@ -75,8 +76,7 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: const HomePage(title: 'home_page_title'.tr()),
-      ),
+      home: HomePage(title: 'home_page_title'.tr()),
     );
   }
 }
