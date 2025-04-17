@@ -15,7 +15,6 @@ class PantryRepository {
 
 
   final JsonStorageService _storageService = JsonStorageService();
-  final _uuid = const Uuid();
   List<PantryItem> pantryItems = [];
 
 
@@ -30,7 +29,7 @@ class PantryRepository {
     bool? excludeFromCaloriesTracker
   }) async {
 
-    final itemId = _uuid.v4();
+    final itemId = Uuid().v4();
 
     if (name.length > 50){
       throw ArgumentError('Name cannot be longer than 50 characters');
