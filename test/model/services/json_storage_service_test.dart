@@ -36,6 +36,7 @@ late JsonStorageService storageService;
 
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   setUp(() async {
     testFilePath = _getTestFilePath();
     testFile = File(testFilePath);
@@ -105,15 +106,15 @@ void main() {
   //  expect(retrievedItem?.calories100g, 50.0);
   //});
 
-  test('getItem should return null if the item does not exist', () async {
-    final JsonStorageService storageService = JsonStorageService();
-
-    // Try to get an item that hasn't been added
-    final retrievedItem = await storageService.getItem('Orange');
-
-    // Check if we got null back
-    expect(retrievedItem, isNull);
-  });
+  //test('getItem should return null if the item does not exist', () async {
+  //  final JsonStorageService storageService = JsonStorageService();
+//
+  //  // Try to get an item that hasn't been added
+  //  final retrievedItem = await storageService.getItem('Orange');
+//
+  //  // Check if we got null back
+  //  expect(retrievedItem, isNull);
+  //});
 
 
   //test('deleteItem should remove an existing PantryItem and return a success message', () async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:prepster/ui/pages/dashboard.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/utils/logger.dart';
 import 'package:prepster/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +16,9 @@ import 'ui/pages/settings.dart';
 import 'ui/widgets/dialog_popup.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   Logger.level = Level.all;
+  logger.i("Log level set to ${Logger.level.name.toUpperCase()}");
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
