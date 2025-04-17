@@ -22,15 +22,15 @@ void main() {
       await sharedPreferences.clear();
     });
 
-    test('Initial language is default', () async {
-      final language = await settingsRepo.getLanguage();
-      expect(language, DEFAULT_LANGUAGE);
+    test('Initial language is null', () async {
+      final language = await settingsRepo.getSelectedLanguage();
+      expect(language, null);
     });
 
     test('Set and get language', () async {
       const newLanguage = 'sv';
       await settingsRepo.setLanguage(newLanguage);
-      final language = await settingsRepo.getLanguage();
+      final language = await settingsRepo.getSelectedLanguage();
       expect(language, newLanguage);
     });
 
