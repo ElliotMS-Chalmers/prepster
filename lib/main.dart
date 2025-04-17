@@ -35,16 +35,8 @@ void main() async {
       fallbackLocale: settings.getFallbackLocale(),
       startLocale: await settings.getPreferredLocale(),
       //startLocale: Locale('sv'), // for testing swap out line above with this
-      child: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => ThemeProvider()),
-          ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
-          ChangeNotifierProvider(
-            create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)),
-            child: SettingsPage(),
-          ),
-          // Add more view models here as needed
-        ],
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
         child: App(),
       ),
     ),
@@ -76,7 +68,14 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: HomePage(title: 'home_page_title'.tr()),
+      home: MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
+        ChangeNotifierProvider(create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)), child: SettingsPage(),),
+        // Add more view models here as needed
+      ],
+      child: HomePage(title: 'home_page_title'.tr()),
+      ),
     );
   }
 }
