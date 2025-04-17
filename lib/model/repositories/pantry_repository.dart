@@ -1,6 +1,7 @@
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
 import 'package:uuid/uuid.dart';
+import 'package:prepster/utils/logger.dart';
 
 class PantryRepository {
 
@@ -74,14 +75,14 @@ class PantryRepository {
   /// Returns a list of all pantry items.
   Future<List<PantryItem>> getAllItems() async {
     final List<PantryItem> pantryList = await _storageService.getAllItems();
-    print('Successfully called the getAllItems-method and returned a map.');
+    logger.i('Successfully called the getAllItems-method and returned a map');
     return pantryList;
   }
 
 
   /// Returns a specific pantry item.
   Future<PantryItem> getItem(int index) async {
-    print('Successfully called the getItem-method for index: $index');
+    logger.i('Successfully called the getItem-method for index: $index');
     return pantryItems[index];
   }
 
@@ -100,17 +101,17 @@ class PantryRepository {
       List<FoodCategory>? categories,
       bool? excludeFromDateTracker,
       bool? excludeFromCaloriesTracker}) async {
-    print('Successfully called the updateItem-method for name: $name');
+    logger.i('Successfully called the updateItem-method for name: $name');
   }
 
   Future<void> deleteItem<T>(T itemToDelete) async {
     if (itemToDelete is String) {
       final result = await _storageService.deleteItem(itemToDelete);
-      print(result);
+      logger.i(result);
       pantryItems.removeWhere((item) => item.id == itemToDelete);
     }
     if (itemToDelete is int){
-      print('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
+      logger.i('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
       pantryItems.removeAt(itemToDelete);
     }
   }

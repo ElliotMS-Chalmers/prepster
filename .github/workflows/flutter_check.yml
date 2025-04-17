@@ -25,6 +25,7 @@ jobs:
       - name: Analyze project
         run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
+      # TODO: uncomment after tests are fixed
       #- name: Run tests
       #  run: flutter test
 
