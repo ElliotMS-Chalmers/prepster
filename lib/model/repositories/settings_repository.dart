@@ -46,11 +46,11 @@ class SettingsRepository {
     await _settingsService.setValue(_notifyDaysBeforeKey, value);
   }
 
-  Future<String> addHouseholdMember(
-      String name,
-      int birthYear,
-      String sex,
-      ) async {
+  Future<String> addHouseholdMember({
+    required String name,
+    required int birthYear,
+    required String sex,
+  }) async {
     final household = await getHousehold();
     final uuid = Uuid();
     final newMember = {

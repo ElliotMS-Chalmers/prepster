@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/theme_provider.dart';
+import '../viewmodels/settings_view_model.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,9 +13,6 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isNotificationsEnabled = true;
 
-  // List to store family members
-  List<Map<String, String>> _familyMembers = [];
-
   // Text controllers for adding family members
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
@@ -23,29 +21,31 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _selectedGender = 'Male'; // Default value for gender
 
   // Function to add a family member
-  void _addFamilyMember() {
-    setState(() {
-      _familyMembers.add({
-        'name': _nameController.text,
-        'age': _ageController.text,
-        'gender': _selectedGender!,
-      });
-    });
+  void _addFamilyMember() async {
+    final settingsViewModel = Provider.of<SettingsViewModel>(context, listen: false);
+    await settingsViewModel.addHouseholdMember(
+      name: _nameController.text,
+      birthYear: DateTime.now().year - int.parse(_ageController.text), // assuming age is entered
+      sex: _selectedGender!,
+    );
 
-    // Clear the text fields after adding
     _nameController.clear();
     _ageController.clear();
+
+    setState(() {}); // trigger rebuild to show updated list
   }
 
   // Function to remove a family member
-  void _removeFamilyMember(int index) {
-    setState(() {
-      _familyMembers.removeAt(index);
-    });
+  void _removeFamilyMember(String id) async {
+    final settingsViewModel = Provider.of<SettingsViewModel>(context, listen: false);
+    await settingsViewModel.deleteHouseholdMember(id);
+    setState(() {}); // refresh UI
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<SettingsViewModel>(context);
+    final household = viewModel.getHousehold();
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
@@ -122,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       _selectedGender = newValue;
                     });
                   },
-                  items: <String>['Male', 'Female', 'Anka']
+                  items: <String>['Male', 'Female']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -141,20 +141,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Display list of family members
           ListView.builder(
-            shrinkWrap: true,  // To prevent scrolling issues inside ListView
-            physics: NeverScrollableScrollPhysics(), // Disable scrolling here
-            itemCount: _familyMembers.length,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: household.length,
             itemBuilder: (context, index) {
-              final familyMember = _familyMembers[index];
+              final member = household[index];
               return ListTile(
-                title: Text('${familyMember['name']} (${familyMember['age']}, ${familyMember['gender']})'),
+                title: Text('${member['name']}'),
+                subtitle: Text('Born: ${member['birthYear']} - ${member['sex']}'),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
-                  onPressed: () => _removeFamilyMember(index),
+                  onPressed: () => _removeFamilyMember(member['id'].toString()),
                 ),
               );
             },
-          ),
+          )
         ],
       ),
     );

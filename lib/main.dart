@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:prepster/model/repositories/settings_repository.dart';
+import 'package:prepster/model/services/settings_service.dart';
 import 'package:prepster/ui/pages/dashboard.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/ui/viewmodels/settings_view_model.dart';
 import 'package:prepster/utils/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +20,16 @@ import 'ui/widgets/dialog_popup.dart';
 void main() {
   Logger.level = Level.all;
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
+        ChangeNotifierProvider(
+          create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)),
+          child: SettingsPage(),
+        ),
+        // Add more view models here as needed
+      ],
       child: App(),
     ),
   );
@@ -37,10 +48,7 @@ class App extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeProvider.themeMode,
-      home: ChangeNotifierProvider(
-        create: (context) => PantryViewModel(PantryRepository()),
-        child: const HomePage(title: 'Home Page'),
-      ),
+      home: const HomePage(title: 'Home Page'),
     );
   }
 }
