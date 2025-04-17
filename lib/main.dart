@@ -22,9 +22,9 @@ import 'package:logger/logger.dart';
 
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Logger.level = Level.all;
   logger.i("Log level set to ${Logger.level.name.toUpperCase()}");
-  WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   SettingsRepository settings = SettingsRepository(SettingsService.instance);
   List<Locale> locales =
