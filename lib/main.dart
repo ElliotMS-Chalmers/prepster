@@ -59,6 +59,7 @@ class App extends StatelessWidget {
     // [🌎 Easy Localization] [WARNING] Localization key [home_page_title] not found
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false, // disable debug banner in emulator
       title: 'app_title'.tr(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
