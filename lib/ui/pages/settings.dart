@@ -49,7 +49,7 @@ class _SettingsPageState extends State<SettingsPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings Page'),
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: [

@@ -1,36 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:prepster/model/repositories/settings_repository.dart';
-import 'package:prepster/model/services/settings_service.dart';
-import 'package:prepster/ui/pages/dashboard.dart';
-import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
-import 'package:prepster/ui/viewmodels/settings_view_model.dart';
-import 'package:prepster/utils/theme_provider.dart';
+
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'model/repositories/pantry_repository.dart';
+import 'model/repositories/settings_repository.dart';
+import 'model/services/settings_service.dart';
 
-import 'ui/pages/equipment.dart';
-import 'ui/pages/medical.dart';
-import 'ui/pages/pantry.dart';
-import 'ui/pages/resources.dart';
-import 'ui/pages/settings.dart';
-import 'ui/widgets/dialog_popup.dart';
+import 'package:prepster/ui/pages/dashboard.dart';
+import 'package:prepster/ui/pages/equipment.dart';
+import 'package:prepster/ui/pages/medical.dart';
+import 'package:prepster/ui/pages/pantry.dart';
+import 'package:prepster/ui/pages/resources.dart';
+import 'package:prepster/ui/pages/settings.dart';
+import 'package:prepster/ui/widgets/dialog_popup.dart';
+import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 
-void main() {
+import 'package:prepster/utils/theme_provider.dart';
+import 'package:prepster/utils/logger.dart';
+import 'package:logger/logger.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   Logger.level = Level.all;
+  logger.i("Log level set to ${Logger.level.name.toUpperCase()}");
+  await EasyLocalization.ensureInitialized();
+  SettingsRepository settings = SettingsRepository(SettingsService.instance);
+
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
-        ChangeNotifierProvider(
-          create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)),
-          child: SettingsPage(),
-        ),
-        // Add more view models here as needed
-      ],
-      child: App(),
+    EasyLocalization(
+      supportedLocales: settings.getLocales(),
+      path: settings.getTranslationsPath(),
+      fallbackLocale: settings.getFallbackLocale(),
+      startLocale: await settings.getPreferredLocale(),
+      //startLocale: Locale('sv'), // for testing swap out line above with this
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
+          ChangeNotifierProvider(
+            create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)),
+            child: SettingsPage(),
+          ),
+          // Add more view models here as needed
+        ],
+        child: App(),
+      ),
     ),
   );
 }
@@ -43,18 +58,32 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+
+    // Due to initialization of EasyLocalization,
+    // app_title and homepage_title might not load right away when
+    // the app is run, but will load correctly when rebuild is triggered.
+    // The following warnings at start are expected and can be safely ignored:
+    // [🌎 Easy Localization] [WARNING] Localization key [app_title] not found
+    // [🌎 Easy Localization] [WARNING] Localization key [home_page_title] not found
+
     return MaterialApp(
-      title: 'Prepster',
+      debugShowCheckedModeBanner: false, // disable debug banner in emulator
+      title: 'app_title'.tr(),
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeProvider.themeMode,
-      home: const HomePage(title: 'Home Page'),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
+      home: const HomePage(title: 'home_page_title'.tr()),
+      ),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -70,7 +99,7 @@ class _HomePageState extends State<HomePage> {
     MedicalPage(),
     EquipmentPage(),
     ResourcesPage(),
-    SettingsPage()
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -79,24 +108,39 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _addPantryItem(String name, String calories100g, String weightKg, DateTime? date) {
-    final pantryViewModel = Provider.of<PantryViewModel>(context, listen: false);
-    pantryViewModel.addItem(name: name, calories100g: double.parse(calories100g), weightKg: double.parse(weightKg), expirationDate: date);
+  void _addPantryItem(
+    String name,
+    String calories100g,
+    String weightKg,
+    DateTime? date,
+  ) {
+    final pantryViewModel = Provider.of<PantryViewModel>(
+      context,
+      listen: false,
+    );
+    pantryViewModel.addItem(
+      name: name,
+      calories100g: double.parse(calories100g),
+      weightKg: double.parse(weightKg),
+      expirationDate: date,
+    );
   }
 
   void _displayItemPopup() {
+
     DateTime? selectedDate;
     showDialog(
       context: context,
-      builder: (_) => NewItemDialogPopup(
-        selectedDate: selectedDate,
-        onSubmit: (name, calories, weight, date) {
-          _addPantryItem(name, calories, weight, date);
-          setState(() {
-            selectedDate = date;
-          });
-        },
-      ),
+      builder:
+          (_) => NewItemDialogPopup(
+            selectedDate: selectedDate,
+            onSubmit: (name, calories, weight, date) {
+              _addPantryItem(name, calories, weight, date);
+              setState(() {
+                selectedDate = date;
+              });
+            },
+          ),
     );
   }
 
@@ -106,23 +150,42 @@ class _HomePageState extends State<HomePage> {
       body: _pageOptions[_selectedIndex],
       floatingActionButton: FloatingActionButton(
         onPressed: _displayItemPopup,
-        tooltip: 'Add product to pantry',
+        tooltip: 'tooltip_add_pantry_item'.tr(),
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Pantry'),
-          BottomNavigationBarItem(icon: Icon(Icons.medication), label: 'Medical'),
-          BottomNavigationBarItem(icon: Icon(Icons.build), label: "Equipment"),
-          BottomNavigationBarItem(icon: Icon(Icons.info), label: "Resources"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: 'bottom_nav_home'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.inventory),
+            label: 'bottom_nav_pantry'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.medication),
+            label: 'bottom_nav_medical'.tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.build),
+            label: "bottom_nav_equipment".tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.info),
+            label: "bottom_nav_resources".tr(),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: "bottom_nav_settings".tr(),
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
+

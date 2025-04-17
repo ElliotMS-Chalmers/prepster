@@ -1,63 +1,148 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/model/repositories/pantry_repository.dart';
+import 'package:uuid/uuid.dart';
 
-// Test for dummy-repository
-// Since this class is only a dummy atm, we can't test more than
-// the return-types and if the methods can be called without crashing.
-// The tests will be updated once the "real" methods have been implemented.
+class MockPantryRepository extends Mock implements PantryRepository {
+  //final _uuid = const Uuid();
+  final List<PantryItem> _pantryItems = [];
+
+  Future<PantryItem> addItem({
+    required String name,
+    DateTime? expirationDate,
+    int? amount,
+    double? calories100g,
+    double? weightKg,
+    List<FoodCategory>? categories,
+    bool? excludeFromDateTracker,
+    bool? excludeFromCaloriesTracker,
+  }) async {
+    print('Before adding item, the list is: $_pantryItems');
+
+    if (name.length > 50) {
+      throw ArgumentError('Name cannot be longer than 50 characters');
+    }
+
+    amount ??= 1;
+
+    if (expirationDate == null) {
+      excludeFromDateTracker = true;
+    }
+
+    if (calories100g == null) {
+      excludeFromCaloriesTracker = true;
+    }
+
+    // The ??= replaces if-statements to check for null-values
+    // If the value isn't null then the value won't be changed
+    if (weightKg != null && weightKg.isNegative) {
+      throw ArgumentError('Weight cannot be negative');
+    }
+
+    categories ??= <FoodCategory>[];
+    excludeFromDateTracker ??= false;
+    excludeFromCaloriesTracker ??= false;
+
+    PantryItem newItem = PantryItem(
+      id: Uuid().v4(),
+      name: name,
+      amount: amount,
+      expirationDate: expirationDate,
+      calories100g: calories100g,
+      weightKg: weightKg,
+      categories: categories,
+      excludeFromDateTracker: excludeFromDateTracker,
+      excludeFromCaloriesTracker: excludeFromCaloriesTracker,
+    );
+    _pantryItems.add(newItem);
+    print('After adding item, the list is: $_pantryItems');
+    return newItem;
+  }
+
+  Future<List<PantryItem>> getAllItems() async {
+    return _pantryItems;
+  }
+
+  Future<void> deleteItem<T>(T itemToDelete) async {
+    _pantryItems.removeWhere((item) => item.id == itemToDelete);
+  }
+}
 
 void main() {
+  final MockPantryRepository MockRepository = MockPantryRepository();
+  List<PantryItem> pantryItems = [];
 
-  group('PantryRepository Tests', () {
-    late PantryRepository pantryRepo;
+  setUp(() async {
+    print('Moving on to next test...');
+    // Clear the list before each test
+    // pantryItems.clear();
+  });
+  tearDown(() {});
 
-    setUp(() {
-      pantryRepo = PantryRepository();
-    });
+  test('[Test] addItem(): valid parameters.', () async {
+    PantryItem newApple = await MockRepository.addItem(
+      name: 'Apple',
+      amount: 3,
+      weightKg: 3.0,
+      calories100g: 100.0,
+      categories: [FoodCategory.carbohydrate],
+      expirationDate: DateTime(2025 - 05 - 01),
+    );
 
+    expect(newApple.name, 'Apple');
+    expect(newApple.amount, 3);
+    expect(newApple.expirationDate, DateTime(2025 - 05 - 01));
+    expect(newApple.calories100g, 100.0);
+    expect(newApple.weightKg, 3.0);
+    expect(newApple.categories?.length, 1);
+    expect(newApple.categories, [FoodCategory.carbohydrate]);
+    expect(newApple.excludeFromDateTracker, false);
+    expect(newApple.excludeFromCaloriesTracker, false);
+    pantryItems.add(newApple);
+    print('AppleId: ${newApple.id}');
 
-    // Test only checks if the method completes
-    // test('Calling addItem prints a message', () async {
-    //   final newItem = PantryItem(name: 'Banana');
-    //   expect(pantryRepo.addItem(newItem), completes);
-    // });
+    PantryItem newToiletPaper = await MockRepository.addItem(
+      name: 'Toilet paper',
+      amount: 6,
+      weightKg: 0.8,
+    );
 
+    expect(newToiletPaper.name, 'Toilet paper');
+    expect(newToiletPaper.amount, 6);
+    expect(newToiletPaper.expirationDate, null);
+    expect(newToiletPaper.calories100g, null);
+    expect(newToiletPaper.weightKg, 0.8);
+    expect(newToiletPaper.categories?.length, 0);
+    expect(newToiletPaper.excludeFromDateTracker, true);
+    expect(newToiletPaper.excludeFromCaloriesTracker, true);
+    pantryItems.add(newToiletPaper);
 
-    // This should return an empty list, as we still can't add any items.
-    test('Calling getAllItems returns an empty list and prints a message', () async {
-      final items = await pantryRepo.getAllItems();
-      expect(items, isEmpty);
-    });
+    print('...');
+  });
 
+  test('[Test] addItem(): invalid parameters.', () async {
+    expectLater(
+      MockRepository.addItem(name: 'Apple', weightKg: -8.0),
+      throwsA(isA<ArgumentError>()),
+    );
+    print('...');
+  });
 
-    // Checks if the returned item is a PantryItem
-    //test('Calling getItem with a name returns a PantryItem and prints a message', () async {
-    //  pantryRepo.addItem(PantryItem(name: "Apple"));
-    //  final item = await pantryRepo.getItem(0);
-    //  expect(item, isA<PantryItem>());
-    //  expect(item.name, "Apple");
-    //});
+  test('[Test] getAllItems(): reading previously added items ', () async {
+    List<PantryItem> retrievedList = await MockRepository.getAllItems();
+    expect(retrievedList, pantryItems);
+    print('Local list: $pantryItems');
+    print('Retrieved list: $retrievedList');
+  });
 
-
-    // Test only checks if the method completes, with some variations
-    test('Calling updateItem completes without error', () async {
-      await pantryRepo.updateItem(name: 'Milk');
-      await pantryRepo.updateItem(name: 'Milk', excludeFromDateTracker: true);
-      await pantryRepo.updateItem(name: 'Milk', calories100g: 150.5);
-      await pantryRepo.updateItem(name: 'Milk', expirationDate: DateTime.now().add(Duration(days: 2)));
-    });
-
-
-    // Test only checks if the method completes, since there's nothing to delete.
-    //test('Calling deleteItem completes without error', () async {
-    //  const itemIndex = 0;
-    //  PantryItem item1 = PantryItem(name: "test1");
-    //  PantryItem item2 = PantryItem(name: "test2");
-    //  pantryRepo.addItem(item1);
-    //  pantryRepo.addItem(item2);
-    //  await pantryRepo.deleteItem(0);
-    //  expect(await pantryRepo.getItem(itemIndex), item2);
-    //});
+  test('[Test] Deleting "Apple" from PantryItems', () async {
+    print('PantryItems before delete: $pantryItems');
+    String itemToDeleteId =
+        pantryItems.firstWhere((item) => item.name == 'Apple').id;
+    await MockRepository.deleteItem(itemToDeleteId);
+    List<PantryItem> retrievedList = await MockRepository.getAllItems();
+    expect(retrievedList.any((item) => item.name == 'Apple'), false);
+    print('PantryItems after delete: $retrievedList');
   });
 }

@@ -1,0 +1,11 @@
+{
+  "app_title": "Prepster",
+  "home_page_title": "Home Page",
+  "bottom_nav_home": "Home",
+  "bottom_nav_pantry": "Pantry",
+  "bottom_nav_medical": "Medical",
+  "bottom_nav_equipment": "Equipment",
+  "bottom_nav_resources": "Resources",
+  "bottom_nav_settings": "Settings",
+  "tooltip_add_pantry_item": "Add product to pantry"
+}
