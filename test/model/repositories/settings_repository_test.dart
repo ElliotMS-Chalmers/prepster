@@ -29,7 +29,7 @@ void main() {
 
     test('Set and get language', () async {
       const newLanguage = 'sv';
-      await settingsRepo.setLanguage(newLanguage);
+      settingsRepo.setLanguage(newLanguage);
       final language = await settingsRepo.getSelectedLanguage();
       expect(language, newLanguage);
     });
