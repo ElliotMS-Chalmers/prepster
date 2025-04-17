@@ -1,25 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:prepster/ui/pages/dashboard.dart';
-import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
-import 'package:prepster/utils/theme_provider.dart';
+
 import 'package:provider/provider.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import 'model/repositories/pantry_repository.dart';
+import 'model/repositories/settings_repository.dart';
+import 'model/services/settings_service.dart';
 
-import 'ui/pages/equipment.dart';
-import 'ui/pages/medical.dart';
-import 'ui/pages/pantry.dart';
-import 'ui/pages/resources.dart';
-import 'ui/pages/settings.dart';
-import 'ui/widgets/dialog_popup.dart';
+import 'package:prepster/ui/pages/dashboard.dart';
+import 'package:prepster/ui/pages/equipment.dart';
+import 'package:prepster/ui/pages/medical.dart';
+import 'package:prepster/ui/pages/pantry.dart';
+import 'package:prepster/ui/pages/resources.dart';
+import 'package:prepster/ui/pages/settings.dart';
+import 'package:prepster/ui/widgets/dialog_popup.dart';
+import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 
-void main() {
+import 'package:prepster/utils/theme_provider.dart';
+import 'package:prepster/utils/logger.dart';
+import 'package:logger/logger.dart';
+
+
+
+void main() async {
   Logger.level = Level.all;
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  SettingsRepository settings = SettingsRepository(SettingsService.instance);
+  List<Locale> locales =
+      settings
+          .getAvailableLanguages()
+          .map((langCode) => Locale(langCode))
+          .toList();
+  String fallbackLocale = settings.getFallbackLanguage();
+
+  Locale preferredLocale = await _getPreferredLocale(settings);
+
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
-      child: App(),
+    EasyLocalization(
+      supportedLocales: locales,
+      path: 'assets/translations',
+      fallbackLocale: Locale(fallbackLocale),
+      startLocale: preferredLocale,
+      child: ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+        child: App(),
+      ),
     ),
   );
 }
@@ -71,24 +98,38 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _addPantryItem(String name, String calories100g, String weightKg, DateTime? date) {
-    final pantryViewModel = Provider.of<PantryViewModel>(context, listen: false);
-    pantryViewModel.addItem(name: name, calories100g: double.parse(calories100g), weightKg: double.parse(weightKg), expirationDate: date);
+  void _addPantryItem(
+    String name,
+    String calories100g,
+    String weightKg,
+    DateTime? date,
+  ) {
+    final pantryViewModel = Provider.of<PantryViewModel>(
+      context,
+      listen: false,
+    );
+    pantryViewModel.addItem(
+      name: name,
+      calories100g: double.parse(calories100g),
+      weightKg: double.parse(weightKg),
+      expirationDate: date,
+    );
   }
 
   void _displayItemPopup() {
     DateTime? selectedDate;
     showDialog(
       context: context,
-      builder: (_) => NewItemDialogPopup(
-        selectedDate: selectedDate,
-        onSubmit: (name, calories, weight, date) {
-          _addPantryItem(name, calories, weight, date);
-          setState(() {
-            selectedDate = date;
-          });
-        },
-      ),
+      builder:
+          (_) => NewItemDialogPopup(
+            selectedDate: selectedDate,
+            onSubmit: (name, calories, weight, date) {
+              _addPantryItem(name, calories, weight, date);
+              setState(() {
+                selectedDate = date;
+              });
+            },
+          ),
     );
   }
 
@@ -109,12 +150,35 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(icon: Icon(Icons.medication), label: 'Medical'),
           BottomNavigationBarItem(icon: Icon(Icons.build), label: "Equipment"),
           BottomNavigationBarItem(icon: Icon(Icons.info), label: "Resources"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings")
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
+}
+
+Future<Locale> _getPreferredLocale(SettingsRepository settingsRepo) async {
+  // Check if a language is set in settingsRepo
+  String? savedLanguageCode = await settingsRepo.getSelectedLanguage();
+  if (savedLanguageCode != null) {
+    logger.d("Saved language: $savedLanguageCode");
+    return Locale(savedLanguageCode);
+  }
+
+  // If not set in settingsRepo, read from device (phone) settings
+  Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.locale;
+  String deviceLanguageCode = deviceLocale.languageCode;
+
+  // Check if the device language is suported
+  if (settingsRepo.getAvailableLanguages().contains(deviceLanguageCode)) {
+    logger.d("Device language: $deviceLanguageCode");
+    return Locale(deviceLanguageCode);
+  }
+
+  // If the phone language is not supported (or could not be read), use fallback
+  logger.d("Using fallback language: ${settingsRepo.getFallbackLanguage()}");
+  return Locale(settingsRepo.getFallbackLanguage());
 }

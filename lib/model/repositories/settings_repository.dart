@@ -1,6 +1,7 @@
 import 'package:prepster/model/services/settings_service.dart';
 import 'package:prepster/utils/default_settings.dart';
 import 'package:uuid/uuid.dart';
+import 'package:prepster/utils/default_settings.dart';
 
 class SettingsRepository {
   final SettingsService _settingsService;
@@ -14,9 +15,16 @@ class SettingsRepository {
   static const String _householdKey = 'household';
 
   // Getters
-  Future<String> getLanguage() async {
-    return (await _settingsService.getValue<String>(_languageKey)) ??
-        DEFAULT_LANGUAGE;
+  Future<String?> getSelectedLanguage() async {
+    return await _settingsService.getValue<String>(_languageKey);
+  }
+
+  List<String> getAvailableLanguages(){
+    return SUPPORTED_LANGUAGES;
+  }
+
+  String getFallbackLanguage(){
+    return DEFAULT_LANGUAGE;
   }
 
   Future<bool> getNotifications() async {
