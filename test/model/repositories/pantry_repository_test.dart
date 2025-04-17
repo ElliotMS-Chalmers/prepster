@@ -5,7 +5,6 @@ import 'package:prepster/model/repositories/pantry_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class MockPantryRepository extends Mock implements PantryRepository {
-
   //final _uuid = const Uuid();
   final List<PantryItem> _pantryItems = [];
 
@@ -17,28 +16,27 @@ class MockPantryRepository extends Mock implements PantryRepository {
     double? weightKg,
     List<FoodCategory>? categories,
     bool? excludeFromDateTracker,
-    bool? excludeFromCaloriesTracker
+    bool? excludeFromCaloriesTracker,
   }) async {
     print('Before adding item, the list is: $_pantryItems');
 
-
-    if (name.length > 50){
+    if (name.length > 50) {
       throw ArgumentError('Name cannot be longer than 50 characters');
     }
 
     amount ??= 1;
 
-    if (expirationDate == null){
+    if (expirationDate == null) {
       excludeFromDateTracker = true;
     }
 
-    if (calories100g == null){
+    if (calories100g == null) {
       excludeFromCaloriesTracker = true;
     }
 
     // The ??= replaces if-statements to check for null-values
     // If the value isn't null then the value won't be changed
-    if (weightKg != null && weightKg.isNegative){
+    if (weightKg != null && weightKg.isNegative) {
       throw ArgumentError('Weight cannot be negative');
     }
 
@@ -46,17 +44,16 @@ class MockPantryRepository extends Mock implements PantryRepository {
     excludeFromDateTracker ??= false;
     excludeFromCaloriesTracker ??= false;
 
-
     PantryItem newItem = PantryItem(
-        id: Uuid().v4(),
-        name: name,
-        amount: amount,
-        expirationDate: expirationDate,
-        calories100g: calories100g,
-        weightKg: weightKg,
-        categories: categories,
-        excludeFromDateTracker: excludeFromDateTracker,
-        excludeFromCaloriesTracker: excludeFromCaloriesTracker
+      id: Uuid().v4(),
+      name: name,
+      amount: amount,
+      expirationDate: expirationDate,
+      calories100g: calories100g,
+      weightKg: weightKg,
+      categories: categories,
+      excludeFromDateTracker: excludeFromDateTracker,
+      excludeFromCaloriesTracker: excludeFromCaloriesTracker,
     );
     _pantryItems.add(newItem);
     print('After adding item, the list is: $_pantryItems');
@@ -73,7 +70,6 @@ class MockPantryRepository extends Mock implements PantryRepository {
 }
 
 void main() {
-
   final MockPantryRepository MockRepository = MockPantryRepository();
   List<PantryItem> pantryItems = [];
 
@@ -82,22 +78,21 @@ void main() {
     // Clear the list before each test
     // pantryItems.clear();
   });
-  tearDown((){});
+  tearDown(() {});
 
   test('[Test] addItem(): valid parameters.', () async {
-
     PantryItem newApple = await MockRepository.addItem(
-        name: 'Apple',
-        amount: 3,
-        weightKg: 3.0,
-        calories100g: 100.0,
-        categories: [FoodCategory.carbohydrate],
-        expirationDate: DateTime(2025-05-01),
+      name: 'Apple',
+      amount: 3,
+      weightKg: 3.0,
+      calories100g: 100.0,
+      categories: [FoodCategory.carbohydrate],
+      expirationDate: DateTime(2025 - 05 - 01),
     );
 
     expect(newApple.name, 'Apple');
     expect(newApple.amount, 3);
-    expect(newApple.expirationDate, DateTime(2025-05-01));
+    expect(newApple.expirationDate, DateTime(2025 - 05 - 01));
     expect(newApple.calories100g, 100.0);
     expect(newApple.weightKg, 3.0);
     expect(newApple.categories?.length, 1);
@@ -108,10 +103,9 @@ void main() {
     print('AppleId: ${newApple.id}');
 
     PantryItem newToiletPaper = await MockRepository.addItem(
-        name: 'Toilet paper',
-        amount: 6,
-        weightKg: 0.8
-
+      name: 'Toilet paper',
+      amount: 6,
+      weightKg: 0.8,
     );
 
     expect(newToiletPaper.name, 'Toilet paper');
@@ -125,11 +119,9 @@ void main() {
     pantryItems.add(newToiletPaper);
 
     print('...');
-
   });
 
   test('[Test] addItem(): invalid parameters.', () async {
-
     expectLater(
       MockRepository.addItem(name: 'Apple', weightKg: -8.0),
       throwsA(isA<ArgumentError>()),
@@ -138,7 +130,6 @@ void main() {
   });
 
   test('[Test] getAllItems(): reading previously added items ', () async {
-
     List<PantryItem> retrievedList = await MockRepository.getAllItems();
     expect(retrievedList, pantryItems);
     print('Local list: $pantryItems');
@@ -147,12 +138,11 @@ void main() {
 
   test('[Test] Deleting "Apple" from PantryItems', () async {
     print('PantryItems before delete: $pantryItems');
-    String itemToDeleteId = pantryItems.firstWhere((item) => item.name == 'Apple').id;
+    String itemToDeleteId =
+        pantryItems.firstWhere((item) => item.name == 'Apple').id;
     await MockRepository.deleteItem(itemToDeleteId);
     List<PantryItem> retrievedList = await MockRepository.getAllItems();
     expect(retrievedList.any((item) => item.name == 'Apple'), false);
     print('PantryItems after delete: $retrievedList');
-
   });
-
 }
