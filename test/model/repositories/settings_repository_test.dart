@@ -68,7 +68,7 @@ void main() {
       int birthYear = 1994;
       String sex = 'M';
 
-      String id = await settingsRepo.addHouseholdMember(name, birthYear, sex);
+      String id = await settingsRepo.addHouseholdMember(name: name, birthYear: birthYear, sex: sex);
 
       final household = await settingsRepo.getHousehold();
 
@@ -81,8 +81,8 @@ void main() {
     });
 
     test('Delete a household member by uuid', () async {
-      String id1 = await settingsRepo.addHouseholdMember('John', 1994, 'M');
-      String id2 = await settingsRepo.addHouseholdMember('Jane', 1990, 'F');
+      String id1 = await settingsRepo.addHouseholdMember(name: 'John', birthYear: 1994, sex: 'M');
+      String id2 = await settingsRepo.addHouseholdMember(name: 'Jane', birthYear:  1990, sex:  'F');
 
       await settingsRepo.deleteHouseholdMember(id1);
 

@@ -15,6 +15,7 @@ import 'package:prepster/ui/pages/resources.dart';
 import 'package:prepster/ui/pages/settings.dart';
 import 'package:prepster/ui/widgets/dialog_popup.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/ui/viewmodels/settings_view_model.dart';
 
 import 'package:prepster/utils/theme_provider.dart';
 import 'package:prepster/utils/logger.dart';
@@ -34,8 +35,16 @@ void main() async {
       fallbackLocale: settings.getFallbackLocale(),
       startLocale: await settings.getPreferredLocale(),
       //startLocale: Locale('sv'), // for testing swap out line above with this
-      child: ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
+          ChangeNotifierProvider(
+            create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)),
+            child: SettingsPage(),
+          ),
+          // Add more view models here as needed
+        ],
         child: App(),
       ),
     ),
@@ -67,10 +76,7 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
-      home: ChangeNotifierProvider(
-        create: (context) => PantryViewModel(PantryRepository()),
-        child: HomePage(title: 'home_page_title'.tr()),
-      ),
+      home: HomePage(title: 'home_page_title'.tr()),
     );
   }
 }

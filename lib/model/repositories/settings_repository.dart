@@ -81,7 +81,6 @@ class SettingsRepository {
     }
   }
 
-
   // Household related
 
   Future<List<Map<String, Object>>> getHousehold() async {
@@ -90,11 +89,13 @@ class SettingsRepository {
         <Map<String, Object>>[];
   }
 
-  Future<String> addHouseholdMember(
-    String name,
-    int birthYear,
-    String sex,
-  ) async {
+
+  Future<String> addHouseholdMember({
+    required String name,
+    required int birthYear,
+    required String sex,
+  }) async {
+
     final household = await getHousehold();
     final uuid = const Uuid();
     final newMember = {
