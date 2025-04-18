@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -73,6 +74,13 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
         ChangeNotifierProvider(create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)), child: SettingsPage(),),
+        ChangeNotifierProxyProvider2<PantryViewModel, SettingsViewModel,DashboardViewModel>(
+          create: (_) => DashboardViewModel(null, null),
+          update: (_, pantryVM, settingsVM,previousDashboardVM) => DashboardViewModel(
+            pantryVM,
+            settingsVM,
+          ),
+        ),
         // Add more view models here as needed
       ],
       child: HomePage(title: 'home_page_title'.tr()),

@@ -1,31 +1,22 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/entities/pantry_item.dart';
 import '../viewmodels/pantry_view_model.dart';
+import '../widgets/household_list_item.dart';
 
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
 
-
-  double _calculateTotalCalories(List<PantryItem> items) {
-    double total = 0;
-    for (var item in items) {
-        if (item.calories100g != null && item.weightKg != null) {
-            total += (item.calories100g! * item.weightKg! * 10);
-        }
-    }
-
-    return total;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<PantryViewModel>(
+    return Consumer<DashboardViewModel>(
       builder: (context, viewModel, child) {
-        List<PantryItem> items = viewModel.getAllItems();
-        double totalCalories = _calculateTotalCalories(items);
+        double totalCalories = viewModel.calculateTotalCalories();
+        List<Map<String, Object>> household = viewModel.getHousehold();
 
         return Scaffold(
           appBar: AppBar(
@@ -48,17 +39,34 @@ class DashboardPage extends StatelessWidget {
                         height: 200,
                       ),
                       const SizedBox(height: 16),
-                      const Text(
-                        'Pantry Overview',
+                      Text(
+                        'dashboard_pantry_title'.tr(),
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Total Calories in pantry: ${totalCalories.round()}',
+                        '${'total_calorie_text'.tr()}${totalCalories.round()} kcal',
                         style: const TextStyle(fontSize: 16),
                       ),
+                      const SizedBox(height: 8),
+                      if (household.isNotEmpty)
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: household.length,
+                          itemBuilder: (context, index) {
+                            final member = household[index];
+                            final name = member['name'] as String? ?? 'Unknown';
+                            final age = member['birthYear'] as int?;
+                            final sex = member['sex'] as String?;
+                            return HouseholdListItem(name: name, age: age, sex: sex);
+                          },
+                        )
+                      else
+                        Text('dashboard_no_household'.tr()),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),

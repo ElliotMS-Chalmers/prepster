@@ -7,5 +7,10 @@
   "bottom_nav_equipment": "Verktyg",
   "bottom_nav_resources": "Resurser",
   "bottom_nav_settings": "Inställningar",
-  "tooltip_add_pantry_item": "Lägg till produkt i skafferiet"
+  "tooltip_add_pantry_item": "Lägg till produkt i skafferiet",
+  "dashboard_pantry_title": "Översikt av skafferi",
+  "total_calorie_text": "Totala mängden kalorier i skafferiet: ",
+  "dashboard_age": "Ålder: ",
+  "dashboard_sex": "Kön: ",
+  "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu."
 }
