@@ -7,10 +7,17 @@ class SettingsViewModel extends ChangeNotifier {
   List<Map<String, Object>> _items = [];
 
   SettingsViewModel(this._repository) {
-    _loadItems();
+    _initialize();
   }
 
   List<Map<String, Object>> getHousehold() => _items;
+
+
+  Future<void> _initialize() async {
+    // IMPORTANT need to initialize cache before using the repository!
+    await _repository.initializeCache();
+    await _loadItems();
+  }
 
   Future<void> _loadItems() async {
     _items = await _repository.getHousehold();

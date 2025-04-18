@@ -15,6 +15,7 @@ void main() {
       sharedPreferences = await SharedPreferences.getInstance();
       settingsService = SettingsService.instance;
       settingsRepo = SettingsRepository(settingsService);
+      await settingsRepo.initializeCache();
     });
 
     tearDown(() async {

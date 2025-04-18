@@ -27,6 +27,7 @@ void main() async {
   logger.i("Log level set to ${Logger.level.name.toUpperCase()}");
   await EasyLocalization.ensureInitialized();
   SettingsRepository settings = SettingsRepository(SettingsService.instance);
+  await settings.initializeCache();
 
   runApp(
     EasyLocalization(

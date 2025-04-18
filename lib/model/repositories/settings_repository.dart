@@ -12,9 +12,9 @@ import 'package:prepster/utils/logger.dart';
 class SettingsRepository {
   final SettingsService _settingsService;
 
-  SettingsRepository(this._settingsService) {
-    _initializeCache();
-  }
+  bool _isCacheInitialized = false;
+
+  SettingsRepository(this._settingsService);
 
   // Settings keys
   static const String _languageKey = 'language';
@@ -34,15 +34,18 @@ class SettingsRepository {
   static const Duration _saveDelay = Duration(milliseconds: 500);
 
   // Initialization
-  Future<void> _initializeCache() async {
-    _language = await _settingsService.getValue<String>(_languageKey);
-    _notificationsEnabled = await _settingsService.getValue<bool>(
-      _notificationKey,
-    );
-    _notifyDaysBefore = await _settingsService.getValue<int>(
-      _notifyDaysBeforeKey,
-    );
-    _householdMembers = await _settingsService.getHousehold();
+  Future<void> initializeCache() async {
+    if (!_isCacheInitialized) {
+      _language = await _settingsService.getValue<String>(_languageKey);
+      _notificationsEnabled = await _settingsService.getValue<bool>(
+        _notificationKey,
+      );
+      _notifyDaysBefore = await _settingsService.getValue<int>(
+        _notifyDaysBeforeKey,
+      );
+      _householdMembers = await _settingsService.getHousehold();
+      _isCacheInitialized = true;
+    }
   }
 
   // Notification related
