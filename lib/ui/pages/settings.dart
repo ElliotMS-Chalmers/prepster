@@ -11,8 +11,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool _isNotificationsEnabled = true;
-
+  late bool _isNotificationsEnabled;
   // Text controllers for adding family members
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
@@ -20,6 +19,12 @@ class _SettingsPageState extends State<SettingsPage> {
   // Gender options for the dropdown
   String? _selectedGender = 'Male'; // Default value for gender
 
+  @override
+  void initState() {
+    super.initState();
+    _isNotificationsEnabled = false; // default until fetched
+    _loadNotificationSetting();
+  }
   // Function to add a family member
   void _addFamilyMember() async {
     final settingsViewModel = Provider.of<SettingsViewModel>(context, listen: false);
@@ -41,6 +46,24 @@ class _SettingsPageState extends State<SettingsPage> {
     await settingsViewModel.deleteHouseholdMember(id);
     setState(() {}); // refresh UI
   }
+
+  void _setNotifications(bool value) async {
+    final settingsViewModel = Provider.of<SettingsViewModel>(context, listen: false);
+    await settingsViewModel.setNotifications(value);
+    setState(() {
+      _isNotificationsEnabled = value;
+    });
+  }
+
+  Future<void> _loadNotificationSetting() async {
+    final settingsViewModel = Provider.of<SettingsViewModel>(context, listen: false);
+    final enabled = await settingsViewModel.getNotifications();
+
+    setState(() {
+      _isNotificationsEnabled = enabled;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +87,13 @@ class _SettingsPageState extends State<SettingsPage> {
               Switch(
                 value: _isNotificationsEnabled,
                 onChanged: (bool value) {
-                  setState(() {
-                    _isNotificationsEnabled = value;
-                  });
+                    _setNotifications(value);
                 },
               ),
             ],
           ),
 
-          // Notifications Row
+          // Dark mode Row
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
