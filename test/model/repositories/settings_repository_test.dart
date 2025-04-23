@@ -47,6 +47,13 @@ void main() {
       expect(notifications, newNotifications);
     });
 
+    test('Toggle darkmode', () async {
+      var initial = await settingsRepo.getDarkmodeOn();
+      await settingsRepo.setDarkmodeOn(!initial);
+      var after = await settingsRepo.getDarkmodeOn();
+      expect(after, !initial);
+    });
+
     test('Initial notify days before is default', () async {
       final notifyDaysBefore = await settingsRepo.getNotifyDaysBefore();
       expect(notifyDaysBefore, DEFAULT_NOTIFY_DAYS_BEFORE);

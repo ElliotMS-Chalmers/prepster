@@ -21,12 +21,14 @@ class SettingsRepository {
   static const String _notificationKey = 'notification';
   static const String _notifyDaysBeforeKey = 'notifyDaysBefore';
   static const String _householdKey = 'household';
+  static const String _darkModeKey = 'darkMode';
 
   // Cache
   String? _language;
   bool? _notificationsEnabled;
   int? _notifyDaysBefore;
   List<Map<String, Object>>? _householdMembers;
+  bool? _darkModeEnabled;
 
   // Dirty flag and save timer
   bool _isDirty = false;
@@ -39,6 +41,9 @@ class SettingsRepository {
       _language = await _settingsService.getValue<String>(_languageKey);
       _notificationsEnabled = await _settingsService.getValue<bool>(
         _notificationKey,
+      );
+      _darkModeEnabled = await _settingsService.getValue<bool>(
+        _darkModeKey,
       );
       _notifyDaysBefore = await _settingsService.getValue<int>(
         _notifyDaysBeforeKey,
@@ -83,6 +88,20 @@ class SettingsRepository {
       _markDirtyAndScheduleSave();
     }
   }
+
+  Future<void> setDarkmodeOn(bool value) async {
+    if (_darkModeEnabled != value) {
+      _darkModeEnabled = value;
+      _markDirtyAndScheduleSave();
+    }
+  }
+  Future<bool> getDarkmodeOn() async {
+    return _darkModeEnabled ??
+        (await _fetchAndCache(_darkModeKey, DEFAULT_DARKMODE_ENABLED)) ??
+        DEFAULT_DARKMODE_ENABLED;
+  }
+
+
 
   // Household related
 
@@ -206,6 +225,9 @@ class SettingsRepository {
       case _notificationKey:
         _notificationsEnabled = value as bool?;
         break;
+      case _darkModeKey:
+        _darkModeEnabled = value as bool?;
+        break;
       case _notifyDaysBeforeKey:
         _notifyDaysBefore = value as int?;
         break;
@@ -234,6 +256,12 @@ class SettingsRepository {
         await _settingsService.setValue(
           _notificationKey,
           _notificationsEnabled,
+        );
+      }
+      if (_darkModeEnabled != null) {
+        await _settingsService.setValue(
+          _darkModeKey,
+          _darkModeEnabled,
         );
       }
       if (_notifyDaysBefore != null) {
