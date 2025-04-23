@@ -53,6 +53,10 @@ class PantryRepository {
     }
 
     categories ??= <FoodCategory, double>{};
+    for (var category in FoodCategory.values) {
+      categories.putIfAbsent(category, () => 0.0);
+    }
+
     excludeFromDateTracker ??= false;
     excludeFromCaloriesTracker ??= false;
 
