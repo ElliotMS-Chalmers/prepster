@@ -1,7 +1,3 @@
-/*
-
-!!!!! FIXA TESTS !!!!! /sorry Marcus
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
@@ -44,7 +40,10 @@ class MockPantryRepository extends Mock implements PantryRepository {
       throw ArgumentError('Weight cannot be negative');
     }
 
-    categories ??= <FoodCategory>[];
+    categories ??= <FoodCategory, double>{};
+    for (var category in FoodCategory.values) {
+      categories.putIfAbsent(category, () => 0.0);
+    }
     excludeFromDateTracker ??= false;
     excludeFromCaloriesTracker ??= false;
 
@@ -90,7 +89,7 @@ void main() {
       amount: 3,
       weightKg: 3.0,
       calories100g: 100.0,
-      categories: [FoodCategory.carbohydrate],
+      categories: {FoodCategory.carbohydrate: 20.0},
       expirationDate: DateTime(2025 - 05 - 01),
     );
 
@@ -99,8 +98,11 @@ void main() {
     expect(newApple.expirationDate, DateTime(2025 - 05 - 01));
     expect(newApple.calories100g, 100.0);
     expect(newApple.weightKg, 3.0);
-    expect(newApple.categories?.length, 1);
-    expect(newApple.categories, [FoodCategory.carbohydrate]);
+    expect(newApple.categories, {
+      FoodCategory.carbohydrate: 20.0,
+      FoodCategory.fat: 0.0,
+      FoodCategory.protein: 0.0,
+    });
     expect(newApple.excludeFromDateTracker, false);
     expect(newApple.excludeFromCaloriesTracker, false);
     pantryItems.add(newApple);
@@ -117,7 +119,11 @@ void main() {
     expect(newToiletPaper.expirationDate, null);
     expect(newToiletPaper.calories100g, null);
     expect(newToiletPaper.weightKg, 0.8);
-    expect(newToiletPaper.categories?.length, 0);
+    expect(newToiletPaper.categories, {
+      FoodCategory.carbohydrate: 0.0,
+      FoodCategory.fat: 0.0,
+      FoodCategory.protein: 0.0,
+    });
     expect(newToiletPaper.excludeFromDateTracker, true);
     expect(newToiletPaper.excludeFromCaloriesTracker, true);
     pantryItems.add(newToiletPaper);
@@ -150,4 +156,3 @@ void main() {
     print('PantryItems after delete: $retrievedList');
   });
 }
-*/
