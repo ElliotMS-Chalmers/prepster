@@ -22,7 +22,7 @@ class PantryViewModel extends ChangeNotifier {
     required String name,
     DateTime? expirationDate,
     double? calories100g,
-    List<FoodCategory>? categories,
+    Map<FoodCategory, double>? categories,
     bool? excludeFromDateTracker,
     bool? excludeFromCaloriesTracker,
     double? weightKg,

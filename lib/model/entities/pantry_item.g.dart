@@ -15,10 +15,10 @@ PantryItem _$PantryItemFromJson(Map<String, dynamic> json) => PantryItem(
           ? null
           : DateTime.parse(json['expirationDate'] as String),
   calories100g: (json['calories100g'] as num?)?.toDouble(),
-  categories:
-      (json['categories'] as List<dynamic>?)
-          ?.map((e) => $enumDecode(_$FoodCategoryEnumMap, e))
-          .toList(),
+  categories: (json['categories'] as Map<String, dynamic>?)?.map(
+    (k, e) =>
+        MapEntry($enumDecode(_$FoodCategoryEnumMap, k), (e as num).toDouble()),
+  ),
   excludeFromDateTracker: json['excludeFromDateTracker'] as bool?,
   excludeFromCaloriesTracker: json['excludeFromCaloriesTracker'] as bool?,
   weightKg: (json['weightKg'] as num?)?.toDouble(),
@@ -32,8 +32,9 @@ Map<String, dynamic> _$PantryItemToJson(PantryItem instance) =>
       'expirationDate': instance.expirationDate?.toIso8601String(),
       'calories100g': instance.calories100g,
       'weightKg': instance.weightKg,
-      'categories':
-          instance.categories?.map((e) => _$FoodCategoryEnumMap[e]!).toList(),
+      'categories': instance.categories?.map(
+        (k, e) => MapEntry(_$FoodCategoryEnumMap[k]!, e),
+      ),
       'excludeFromDateTracker': instance.excludeFromDateTracker,
       'excludeFromCaloriesTracker': instance.excludeFromCaloriesTracker,
     };

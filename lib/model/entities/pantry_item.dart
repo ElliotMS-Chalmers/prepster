@@ -43,7 +43,7 @@ class PantryItem {
   /// A list of categories this item belongs to, using the [FoodCategory] enum.
   /// Possible values are:
   /// [FoodCategory.fat], [FoodCategory.carbohydrate], [FoodCategory.protein].
-  List<FoodCategory>? categories;
+  Map<FoodCategory, double>? categories;
 
   /// Optional: Exclude this item from the expiration-date-tracker.
   /// This means no notifications etc. will be sent for this item.

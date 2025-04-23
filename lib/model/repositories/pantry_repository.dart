@@ -25,7 +25,7 @@ class PantryRepository {
     int? amount,
     double? calories100g,
     double? weightKg,
-    List<FoodCategory>? categories,
+    Map<FoodCategory, double>? categories,
     bool? excludeFromDateTracker,
     bool? excludeFromCaloriesTracker
   }) async {
@@ -52,7 +52,7 @@ class PantryRepository {
       throw ArgumentError('Weight cannot be negative');
     }
 
-    categories ??= <FoodCategory>[];
+    categories ??= <FoodCategory, double>{};
     excludeFromDateTracker ??= false;
     excludeFromCaloriesTracker ??= false;
 
@@ -98,7 +98,7 @@ class PantryRepository {
       required String name,
       DateTime? expirationDate,
       double? calories100g,
-      List<FoodCategory>? categories,
+      Map<FoodCategory, double>? categories,
       bool? excludeFromDateTracker,
       bool? excludeFromCaloriesTracker}) async {
     logger.i('Successfully called the updateItem-method for name: $name');
