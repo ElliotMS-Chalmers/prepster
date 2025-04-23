@@ -1,7 +1,3 @@
-/*
-
-!!!!! FIXA TESTS !!!!! /sorry Marcus
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,7 +44,7 @@ class MockJsonStorageService extends Mock implements JsonStorageService {
     pantryMap[newItem.id] = newItemJson;
     await _savePantryMap(pantryMap);
     print(
-      'Item "${newItem.name}" with ID "$newItem.id" added to $_testFilePath',
+      'Item "${newItem.name}" with ID "${newItem.id}" added to $_testFilePath',
     );
     return newItem.id;
   }
@@ -113,7 +109,11 @@ void main() {
           'expirationDate': DateTime(2025, 1, 1).toIso8601String(),
           'calories100g': 52.0,
           'weightKg': 0.5,
-          'categories': ['carbohydrate'],
+          'categories': {
+            'carbohydrate': 20.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': false,
           'excludeFromCaloriesTracker': false,
         },
@@ -124,7 +124,11 @@ void main() {
           'expirationDate': DateTime(2025, 1, 1).toIso8601String(),
           'calories100g': 52.0,
           'weightKg': 0.5,
-          'categories': ['carbohydrate'],
+          'categories': {
+            'carbohydrate': 50.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': false,
           'excludeFromCaloriesTracker': false,
         },
@@ -133,15 +137,18 @@ void main() {
     });
 
     test('addItem() should add a PantryItem to the JSON file', () async {
-      const String testToiletPaperId = 'toilet-paper-id';
       final newToiletPaper = PantryItem(
-        id: testToiletPaperId,
+        id: 'toilet-paper-id',
         name: 'Toilet Paper',
         amount: 5,
         expirationDate: null,
         calories100g: 0.0,
         weightKg: 0.5,
-        categories: [],
+        categories: {
+          FoodCategory.carbohydrate: 0.0,
+          FoodCategory.fat: 0.0,
+          FoodCategory.protein: 0.0,
+        },
         excludeFromDateTracker: true,
         excludeFromCaloriesTracker: true,
       );
@@ -154,7 +161,11 @@ void main() {
           'expirationDate': DateTime(2025, 1, 1).toIso8601String(),
           'calories100g': 52.0,
           'weightKg': 0.5,
-          'categories': ['carbohydrate'],
+          'categories': {
+            'carbohydrate': 20.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': false,
           'excludeFromCaloriesTracker': false,
         },
@@ -165,7 +176,11 @@ void main() {
           'expirationDate': DateTime(2025, 1, 1).toIso8601String(),
           'calories100g': 52.0,
           'weightKg': 0.5,
-          'categories': ['carbohydrate'],
+          'categories': {
+            'carbohydrate': 50.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': false,
           'excludeFromCaloriesTracker': false,
         },
@@ -176,7 +191,11 @@ void main() {
           'expirationDate': null,
           'calories100g': 0.0,
           'weightKg': 0.5,
-          'categories': [],
+          'categories': {
+            'carbohydrate': 0.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': true,
           'excludeFromCaloriesTracker': true,
         },
@@ -200,7 +219,11 @@ void main() {
             expirationDate: DateTime(2025, 1, 1),
             calories100g: 52.0,
             weightKg: 0.5,
-            categories: [FoodCategory.carbohydrate],
+            categories: {
+              FoodCategory.carbohydrate: 20.0,
+              FoodCategory.fat: 0.0,
+              FoodCategory.protein: 0.0,
+            },
             excludeFromDateTracker: false,
             excludeFromCaloriesTracker: false,
           ),
@@ -211,7 +234,11 @@ void main() {
             expirationDate: DateTime(2025, 1, 1),
             calories100g: 52.0,
             weightKg: 0.5,
-            categories: [FoodCategory.carbohydrate],
+            categories: {
+              FoodCategory.carbohydrate: 50.0,
+              FoodCategory.fat: 0.0,
+              FoodCategory.protein: 0.0,
+            },
             excludeFromDateTracker: false,
             excludeFromCaloriesTracker: false,
           ),
@@ -234,7 +261,11 @@ void main() {
           expirationDate: DateTime(2025, 1, 1),
           calories100g: 52.0,
           weightKg: 0.5,
-          categories: [FoodCategory.carbohydrate],
+          categories: {
+            FoodCategory.carbohydrate: 20.0,
+            FoodCategory.fat: 0.0,
+            FoodCategory.protein: 0.0,
+          },
           excludeFromDateTracker: false,
           excludeFromCaloriesTracker: false,
         );
@@ -251,7 +282,11 @@ void main() {
           'expirationDate': DateTime(2025, 1, 1).toIso8601String(),
           'calories100g': 52.0,
           'weightKg': 0.5,
-          'categories': ['carbohydrate'],
+          'categories': {
+            'carbohydrate': 50.0,
+            'fat': 0.0,
+            'protein': 0.0,
+          },
           'excludeFromDateTracker': false,
           'excludeFromCaloriesTracker': false,
         },
@@ -263,4 +298,3 @@ void main() {
     });
   });
 }
-*/
