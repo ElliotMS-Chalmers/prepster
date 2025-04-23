@@ -39,6 +39,7 @@ dependencies:
   mockito: ^5.4.5
   logger: ^2.5.0
   easy_localization: ^3.0.7
+  flutter_pdfview: ^1.4.0
 
 
 dev_dependencies:
@@ -68,6 +69,7 @@ flutter:
   assets:
     - lib/ui/pages/assets/piechart-placeholder.png
     - assets/translations/
+    - assets/resources/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
