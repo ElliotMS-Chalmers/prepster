@@ -69,7 +69,7 @@ flutter:
   assets:
     - lib/ui/pages/assets/piechart-placeholder.png
     - assets/translations/
-    - assets/resources/
+    - assets/resources/ # This is for pdf files used by resources section of the app
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
