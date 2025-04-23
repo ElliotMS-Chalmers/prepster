@@ -1,11 +1,17 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prepster/model/repositories/resources_repository.dart';
 
 void main() {
   group('ResourcesRepository Tests', () {
 
-    setUp(() {
+    setUpAll(() {
       TestWidgetsFlutterBinding.ensureInitialized();
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            MethodChannel('logger'),
+            (MethodCall methodCall) async => null,
+          );
     });
 
     test('ResourcesRepository loads English files', () async {
