@@ -15,16 +15,16 @@ class DashboardViewModel extends ChangeNotifier {
       _pantryVM.addListener(_updateDashboardItems);
       _settingsVM.addListener(_updateDashboardItems);
       _updateDashboardItems();
+      _loadItems();
+      _loadHousehold();
     }
-    _loadItems();
-    _loadHousehold();
   }
 
   List<PantryItem> getAllItems() => _items;
   List<Map<String, Object>> getHousehold() => _household;
 
-  Future<void> _loadItems() async {
-    _items = await _pantryVM!.getAllItems();
+  void _loadItems() {
+    _items = _pantryVM!.getAllItems();
     notifyListeners();
   }
 
@@ -37,8 +37,8 @@ class DashboardViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> _loadHousehold() async {
-    _household = await _settingsVM!.getHousehold();
+  void _loadHousehold() {
+    _household = _settingsVM!.getHousehold();
     notifyListeners();
   }
 
