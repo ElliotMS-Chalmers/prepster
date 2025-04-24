@@ -51,5 +51,10 @@ class SettingsViewModel extends ChangeNotifier {
   Future<void> setNotifications(bool value) async {
     await _repository.setNotifications(value);
   }
+
+  Future<void> setDarkModeOn(bool value) async {
+    await _repository.setDarkmodeOn(value);
+  }
+
 }
 
