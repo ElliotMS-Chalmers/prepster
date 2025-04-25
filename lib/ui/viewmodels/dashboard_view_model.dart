@@ -42,13 +42,24 @@ class DashboardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  double calculateTotalCalories() {
-    double total = 0;
+  Map<String, double> calculateTotalPantry() {
+    double totalcalories = 0;
+    double totalCarbs = 0;
+    double totalProtein = 0;
+    double totalFat = 0;
     for (var item in _items) {
-      if (item.calories100g != null && item.weightKg != null) {
-        total += (item.calories100g! * item.weightKg! * 10);
+      if (item.weightKg != null) {
+        if (item.calories100g != null) {
+          totalcalories += (item.calories100g! * item.weightKg! * 10);
+        }
+        totalCarbs += (item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10);
+        totalProtein += (item.categories![FoodCategory.protein]! * item.weightKg! * 10);
+        totalFat += (item.categories![FoodCategory.fat]! * item.weightKg! * 10);
       }
+
     }
+
+    Map<String, double> total = {"calories": totalcalories, "carbs": totalCarbs, "protein": totalProtein, "fat": totalFat};
 
     return total;
   }

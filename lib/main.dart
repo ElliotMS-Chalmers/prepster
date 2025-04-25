@@ -4,6 +4,7 @@ import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import 'model/entities/pantry_item.dart';
 import 'model/repositories/pantry_repository.dart';
 import 'model/repositories/settings_repository.dart';
 import 'model/services/settings_service.dart';
@@ -122,16 +123,38 @@ class _HomePageState extends State<HomePage> {
     String name,
     String calories100g,
     String weightKg,
+    String? carbs,
+    String? protein,
+    String? fat,
     DateTime? date,
   ) {
     final pantryViewModel = Provider.of<PantryViewModel>(
       context,
       listen: false,
     );
+
+    final Map<FoodCategory, double> categories = {};
+
+    final parsedCarbs = double.tryParse(carbs ?? '');
+    if (parsedCarbs != null) {
+      categories[FoodCategory.carbohydrate] = parsedCarbs;
+    }
+
+    final parsedProtein = double.tryParse(protein ?? '');
+    if (parsedProtein != null) {
+      categories[FoodCategory.protein] = parsedProtein;
+    }
+
+    final parsedFat = double.tryParse(fat ?? '');
+    if (parsedFat != null) {
+      categories[FoodCategory.fat] = parsedFat;
+    }
+
     pantryViewModel.addItem(
       name: name,
       calories100g: double.parse(calories100g),
       weightKg: double.parse(weightKg),
+      categories: categories,
       expirationDate: date,
     );
   }
@@ -144,8 +167,8 @@ class _HomePageState extends State<HomePage> {
       builder:
           (_) => NewItemDialogPopup(
             selectedDate: selectedDate,
-            onSubmit: (name, calories, weight, date) {
-              _addPantryItem(name, calories, weight, date);
+            onSubmit: (name, calories, weight, carbs, protein, fat, date) {
+              _addPantryItem(name, calories, weight, carbs, protein, fat, date);
               setState(() {
                 selectedDate = date;
               });

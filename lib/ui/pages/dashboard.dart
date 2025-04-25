@@ -15,7 +15,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DashboardViewModel>(
       builder: (context, viewModel, child) {
-        double totalCalories = viewModel.calculateTotalCalories();
+        Map<String, double> totalAmountPantry = viewModel.calculateTotalPantry();
         List<Map<String, Object>> household = viewModel.getHousehold();
 
         return Scaffold(
@@ -47,7 +47,19 @@ class DashboardPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${'total_calorie_text'.tr()}${totalCalories.round()} kcal',
+                        '${'total_calorie_text'.tr()}${totalAmountPantry["calories"]!.round()} kcal',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        '${'total_carbs_text'.tr()}${totalAmountPantry["carbs"]!.round()}g carbohydrates',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        '${'total_protein_text'.tr()}${totalAmountPantry["protein"]!.round()}g protein',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        '${'total_fat_text'.tr()}${totalAmountPantry["fat"]!.round()}g fat',
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 8),

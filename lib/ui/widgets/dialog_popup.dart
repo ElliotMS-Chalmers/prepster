@@ -1,11 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class NewItemDialogPopup extends StatefulWidget {
   final TextEditingController _textController1 = TextEditingController();
   final TextEditingController _textController2 = TextEditingController();
   final TextEditingController _textController3 = TextEditingController();
+  final TextEditingController _textController4 = TextEditingController();
+  final TextEditingController _textController5 = TextEditingController();
+  final TextEditingController _textController6 = TextEditingController();
   final DateTime? selectedDate;
-  final void Function(String name, String calories, String weight, DateTime date) onSubmit;
+  final void Function(String name, String calories, String weight, String carbs, String protein, String fat, DateTime date) onSubmit;
 
   NewItemDialogPopup({
     super.key,
@@ -29,7 +33,7 @@ class _NewItemDialogPopupState extends State<NewItemDialogPopup> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Enter item info'),
+      title: Text('dialog_popup_title'.tr()),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -44,6 +48,18 @@ class _NewItemDialogPopupState extends State<NewItemDialogPopup> {
           TextField(
             controller: widget._textController3,
             decoration: const InputDecoration(labelText: 'Weight in kg'),
+          ),
+          TextField(
+            controller: widget._textController4,
+            decoration: const InputDecoration(labelText: 'Carbohydrates per 100g'),
+          ),
+          TextField(
+            controller: widget._textController5,
+            decoration: const InputDecoration(labelText: 'Protein per 100g'),
+          ),
+          TextField(
+            controller: widget._textController6,
+            decoration: const InputDecoration(labelText: 'Fat per 100g'),
           ),
           TextFormField(
             controller: TextEditingController(
@@ -89,6 +105,9 @@ class _NewItemDialogPopupState extends State<NewItemDialogPopup> {
                 widget._textController1.text,
                 widget._textController2.text,
                 widget._textController3.text,
+                widget._textController4.text,
+                widget._textController5.text,
+                widget._textController6.text,
                 _selectedDate!,
               );
               Navigator.pop(context);

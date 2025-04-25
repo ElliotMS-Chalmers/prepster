@@ -79,6 +79,18 @@ class PantryItemListItem extends StatelessWidget {
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
+                const SizedBox(width: 12),
+                Text(
+                    "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)}g carbs"
+                ),
+                const SizedBox(width: 12),
+                Text(
+                    "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)}g protein"
+                ),
+                const SizedBox(width: 12),
+                Text(
+                    "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)}g fat"
+                ),
               ],
             ),
           ],
