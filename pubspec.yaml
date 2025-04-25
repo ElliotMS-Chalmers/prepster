@@ -40,6 +40,7 @@ dependencies:
   logger: ^2.5.0
   easy_localization: ^3.0.7
   flutter_pdfview: ^1.4.0
+  fl_chart: ^0.71.0
 
 
 dev_dependencies:

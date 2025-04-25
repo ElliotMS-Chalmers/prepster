@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:prepster/ui/pages/dashboard/pie_chart.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,7 @@ class DashboardPage extends StatelessWidget {
     return Consumer<DashboardViewModel>(
       builder: (context, viewModel, child) {
         Map<String, double> totalAmountPantry = viewModel.calculateTotalPantry();
+        double totalMacros = totalAmountPantry["carbs"]! + totalAmountPantry["protein"]! + totalAmountPantry["fat"]!;
         List<Map<String, Object>> household = viewModel.getHousehold();
 
         return Scaffold(
@@ -32,10 +35,13 @@ class DashboardPage extends StatelessWidget {
                 Center(
                   child: Column(
                     children: [
-                      // Placeholder pie chart image
-                      Image.asset(
-                        'lib/ui/pages/assets/piechart-placeholder.png',
-                        height: 200,
+                      SizedBox(
+                        height: 250,
+                        child: MacronutrientPieChart(
+                          carbs: totalAmountPantry["carbs"]!,
+                          protein: totalAmountPantry["protein"]!,
+                          fat: totalAmountPantry["fat"]!,
+                        )
                       ),
                       const SizedBox(height: 16),
                       Text(
