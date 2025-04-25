@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/entities/pantry_item.dart';
-import '../viewmodels/pantry_view_model.dart';
-import '../widgets/pantry_item_list_item.dart';
+import 'package:prepster/model/entities/pantry_item.dart';
+import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
+import 'package:prepster/ui/pages/inventory/tabs/pantry/pantry_list_item.dart';
 
-class PantryPage extends StatefulWidget {
-  PantryPage({super.key});
+class PantryTab extends StatefulWidget {
+  PantryTab({super.key});
 
   @override
-  _PantryPageState createState() => _PantryPageState();
+  _PantryTabState createState() => _PantryTabState();
 }
 
-class _PantryPageState extends State<PantryPage> {
-  _PantryPageState();
+class _PantryTabState extends State<PantryTab> {
+  _PantryTabState();
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +22,12 @@ class _PantryPageState extends State<PantryPage> {
         List<PantryItem> items = viewModel.getAllItems();
 
         return Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'Pantry',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
           body: ListView.builder(
             padding: const EdgeInsets.all(10),
             itemCount: items.length,
             itemBuilder: (context, index) {
               PantryItem item = items[index];
-              return PantryItemListItem(
+              return PantryListItem(
                 item: item,
                 //index: index,
                 onDelete: (i) => viewModel.deleteItem(i),

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../model/entities/pantry_item.dart';
-import '../viewmodels/pantry_view_model.dart';
-import '../widgets/household_list_item.dart';
+import '../../../model/entities/pantry_item.dart';
+import '../../viewmodels/pantry_view_model.dart';
+import 'household_list_item.dart';
 
 
 class DashboardPage extends StatelessWidget {
@@ -22,7 +22,6 @@ class DashboardPage extends StatelessWidget {
           appBar: AppBar(
             title: const Text(
               'Dashboard',
-              style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
           body: Padding(

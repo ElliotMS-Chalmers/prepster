@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../model/entities/pantry_item.dart';
+import '../../../../../model/entities/pantry_item.dart';
 
-class PantryItemListItem extends StatelessWidget {
+class PantryListItem extends StatelessWidget {
   final PantryItem item;
   // final int index; // No longer needed for deleting
   final void Function(String itemId) onDelete;
 
-  const PantryItemListItem({
+  const PantryListItem({
     super.key,
     required this.item,
     required this.onDelete,

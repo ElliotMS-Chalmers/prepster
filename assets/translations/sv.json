@@ -2,6 +2,7 @@
   "app_title": "Prepster",
   "home_page_title": "Startsida",
   "bottom_nav_home": "Hem",
+  "bottom_nav_inventory": "Förråd",
   "bottom_nav_pantry": "Skafferi",
   "bottom_nav_medical": "Medicin",
   "bottom_nav_equipment": "Verktyg",
@@ -12,5 +13,9 @@
   "total_calorie_text": "Totala mängden kalorier i skafferiet: ",
   "dashboard_age": "Ålder: ",
   "dashboard_sex": "Kön: ",
-  "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu."
+  "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu.",
+  "inventory_page_title": "Förråd",
+  "pantry_tab_name": "Skafferi",
+  "medicine_tab_name": "Medicin",
+  "equipment_tab_name": "Verktyg"
 }

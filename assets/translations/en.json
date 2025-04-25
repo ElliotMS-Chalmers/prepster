@@ -2,6 +2,7 @@
   "app_title": "Prepster",
   "home_page_title": "Home Page",
   "bottom_nav_home": "Home",
+  "bottom_nav_inventory": "Inventory",
   "bottom_nav_pantry": "Pantry",
   "bottom_nav_medical": "Medical",
   "bottom_nav_equipment": "Equipment",
@@ -12,5 +13,9 @@
   "total_calorie_text": "Total Calories in pantry: ",
   "dashboard_age": "Age: ",
   "dashboard_sex": "Sex: ",
-  "dashboard_no_household": "No household members added yet."
+  "dashboard_no_household": "No household members added yet.",
+  "inventory_page_title": "Inventory",
+  "pantry_tab_name": "Pantry",
+  "medicine_tab_name": "Medicine",
+  "equipment_tab_name": "Equipment"
 }
