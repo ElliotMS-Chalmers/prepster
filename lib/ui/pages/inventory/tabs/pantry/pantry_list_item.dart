@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../model/entities/pantry_item.dart';
+import '../../../../widgets/dismissible_list_item.dart';
 
 class PantryListItem extends StatelessWidget {
   final PantryItem item;
-  // final int index; // No longer needed for deleting
   final void Function(String itemId) onDelete;
 
   const PantryListItem({
@@ -17,23 +17,10 @@ class PantryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Dismissible(
-      key: Key(item.id), // Use item.id as the key for Dismissible
-      direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Deleted ${item.name} from pantry')),
-        );
-        onDelete(item.id); // Pass item.id instead of in onDelete
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
+    return DismissibleListItem(
+        id: item.id,
+        onDismissed: onDelete,
+        child:Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -69,7 +56,7 @@ class PantryListItem extends StatelessWidget {
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 Text(
                   (item.calories100g != null && item.weightKg != null)
                       ? "${(item.calories100g! * item.weightKg! * 10).toStringAsFixed(1)} kcal"
@@ -79,11 +66,22 @@ class PantryListItem extends StatelessWidget {
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
+                const SizedBox(width: 8),
+                Text(
+                    "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)}g carbs"
+                ),
+                const SizedBox(width: 8),
+                Text(
+                    "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)}g protein"
+                ),
+                const SizedBox(width: 8),
+                Text(
+                    "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)}g fat"
+                ),
               ],
             ),
           ],
         ),
-      ),
     );
   }
 }

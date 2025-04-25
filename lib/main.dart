@@ -26,6 +26,8 @@ void main() async {
   await EasyLocalization.ensureInitialized();
   SettingsRepository settings = SettingsRepository(SettingsService.instance);
   await settings.initializeCache();
+  final themeProvider = ThemeProvider(settings);
+  await themeProvider.loadTheme();
 
   runApp(
     EasyLocalization(
@@ -33,8 +35,9 @@ void main() async {
       path: settings.getTranslationsPath(),
       fallbackLocale: settings.getFallbackLocale(),
       startLocale: await settings.getPreferredLocale(),
+      //startLocale: Locale('sv'), // for testing swap out line above with this
       child: ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
+        create: (_) => themeProvider,
         child: App(),
       ),
     ),

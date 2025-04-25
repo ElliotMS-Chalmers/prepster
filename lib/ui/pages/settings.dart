@@ -105,6 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 value: themeProvider.isDarkMode,
                 onChanged: (value) {
                   themeProvider.toggleTheme(value);
+                  viewModel.setDarkModeOn(value);
                 },
               ),
             ],
