@@ -18,9 +18,18 @@
   "dashboard_sex": "Sex: ",
   "dashboard_no_household": "No household members added yet.",
   "dialog_popup_title": "Enter item info",
-  "dashboard_no_household": "No household members added yet.",
   "inventory_page_title": "Inventory",
   "pantry_tab_name": "Pantry",
   "medicine_tab_name": "Medicine",
-  "equipment_tab_name": "Equipment"
+  "equipment_tab_name": "Equipment",
+  "settings_language_list": "Language",
+  "settings_dark_mode": "Dark Mode",
+  "settings_notifications": "Notifications",
+  "settings_family_members_title" : "Family Members",
+  "settings_family_members_name" : "Name",
+  "settings_family_members_age" : "Age",
+  "settings_family_members_gender_title" : "Gender",
+  "settings_family_members_gender_list_male" : "Male",
+  "settings_family_members_gender_list_female" : "Female",
+  "settings_add_family_member" : "Add Family Member"
 }
