@@ -17,10 +17,19 @@
   "dashboard_age": "Ålder: ",
   "dashboard_sex": "Kön: ",
   "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu.",
+  "dialog_popup_title": "Skriv in varuinfo",
   "inventory_page_title": "Förråd",
   "pantry_tab_name": "Skafferi",
   "medicine_tab_name": "Medicin",
   "equipment_tab_name": "Verktyg",
-  "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu.",
-  "dialog_popup_title": "Skriv in varuinfo"
+  "settings_language_list": "Språk",
+  "settings_dark_mode": "Mörkt tema",
+  "settings_notifications": "Notifikationer",
+  "settings_family_members_title": "Familjemedlemmar",
+  "settings_family_members_name": "Namn",
+  "settings_family_members_age": "Ålder",
+  "settings_family_members_gender_title": "Kön",
+  "settings_family_members_gender_list_male": "Man",
+  "settings_family_members_gender_list_female": "Kvinna",
+  "settings_add_family_member": "Lägg till familjemedlem"
 }

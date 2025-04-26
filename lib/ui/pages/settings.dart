@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../utils/theme_provider.dart';
 import '../viewmodels/settings_view_model.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -19,11 +20,16 @@ class _SettingsPageState extends State<SettingsPage> {
   // Gender options for the dropdown
   String? _selectedGender = 'Male'; // Default value for gender
 
+  // Language state
+  String? _selectedLanguage;
+
   @override
   void initState() {
     super.initState();
     _isNotificationsEnabled = false; // default until fetched
     _loadNotificationSetting();
+    _selectedLanguage =
+        Provider.of<SettingsViewModel>(context, listen: false).selectedLanguage;
   }
   // Function to add a family member
   void _addFamilyMember() async {
@@ -76,13 +82,40 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         children: [
+
+          // Language Row
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('settings_language_list'.tr()),
+              ),
+              DropdownButton<String>(
+                value: _selectedLanguage,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedLanguage = newValue;
+                  });
+                  viewModel.setSelectedLanguage(newValue);
+                },
+                items: viewModel.availableLanguages.map<DropdownMenuItem<String>>((String languageCode) {
+                  return DropdownMenuItem<String>(
+                    value: languageCode,
+                    child: Text(languageCode),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+
           // Notifications Row
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Notifications'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('settings_notifications'.tr()),
               ),
               Switch(
                 value: _isNotificationsEnabled,
@@ -97,9 +130,9 @@ class _SettingsPageState extends State<SettingsPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text('Dark Mode'),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('settings_dark_mode'.tr()),
               ),
               Switch(
                 value: themeProvider.isDarkMode,
@@ -112,9 +145,9 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
 
           // Family Members Section
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text('Family Members'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text('settings_family_members_title'.tr()),
           ),
 
           // Input fields for adding family members
@@ -125,17 +158,17 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 TextField(
                   controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Name'),
+                  decoration: InputDecoration(labelText: 'settings_family_members_name'.tr()),
                 ),
                 TextField(
                   controller: _ageController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Age'),
+                  decoration: InputDecoration(labelText: 'settings_family_members_age'.tr()),
                 ),
                 // Gender Dropdown
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('Gender'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text('settings_family_members_gender_title'.tr()),
                 ),
                 DropdownButton<String>(
                   value: _selectedGender,
@@ -155,7 +188,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: _addFamilyMember,
-                  child: const Text('Add Family Member'),
+                  child: Text('settings_add_family_member'.tr()),
                 ),
               ],
             ),
