@@ -41,6 +41,7 @@ dependencies:
   easy_localization: ^3.0.7
   flutter_pdfview: ^1.4.0
   fl_chart: ^0.71.0
+  http: ^1.2.0
 
 
 dev_dependencies:
