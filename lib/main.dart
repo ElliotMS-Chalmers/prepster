@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/model/entities/inventory_item.dart';
+import 'package:prepster/model/repositories/inventory_repository.dart';
+import 'package:prepster/model/services/json_storage_service.dart';
+import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import 'model/entities/pantry_item.dart';
 import 'model/repositories/pantry_repository.dart';
 import 'model/repositories/settings_repository.dart';
 import 'model/services/settings_service.dart';
@@ -71,7 +76,7 @@ class App extends StatelessWidget {
       locale: context.locale,
       home: MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
+        ChangeNotifierProvider(create: (_) => PantryViewModel(InventoryRepository<PantryItem>(PantryJsonStorageService.instance))),
         ChangeNotifierProvider(create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)), child: SettingsPage(),),
         ChangeNotifierProxyProvider2<PantryViewModel, SettingsViewModel,DashboardViewModel>(
           create: (_) => DashboardViewModel(null, null),

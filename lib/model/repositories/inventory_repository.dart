@@ -3,9 +3,12 @@ import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:prepster/utils/logger.dart';
 
+import '../entities/equipment_item.dart';
+import '../entities/inventory_item.dart';
+import '../entities/medical_item.dart';
 import '../services/json_storage_service.dart';
-/*
-class PantryRepository {
+
+class InventoryRepository<T extends InventoryItem> {
 
   /// The [newItem] parameter is a [PantryItem] object containing
   /// all the details of the item to be added.
@@ -17,11 +20,15 @@ class PantryRepository {
   /// ```
 
 
-  final JsonStorageService _storageService = JsonStorageService();
-  List<PantryItem> pantryItems = [];
+  final JsonStorageService _storageService;
+  //Maybe need more services for saving
 
+  List<T> items = [];
+
+  InventoryRepository(this._storageService);
 
   Future<void> addItem({
+    required ItemType itemType,
     required String name,
     DateTime? expirationDate,
     int? amount,
@@ -31,6 +38,8 @@ class PantryRepository {
     bool? excludeFromDateTracker,
     bool? excludeFromCaloriesTracker
   }) async {
+
+    InventoryItem newItem;
 
     final itemId = Uuid().v4();
 
@@ -62,35 +71,54 @@ class PantryRepository {
     excludeFromDateTracker ??= false;
     excludeFromCaloriesTracker ??= false;
 
-
-    PantryItem newItem = PantryItem(
-      id: itemId,
-      name: name,
-      amount: amount,
-      expirationDate: expirationDate,
-      calories100g: calories100g,
-      weightKg: weightKg,
-      categories: categories,
-      excludeFromDateTracker: excludeFromDateTracker,
-      excludeFromCaloriesTracker: excludeFromCaloriesTracker
-    );
+    switch (itemType) {
+      case ItemType.pantryItem:
+        newItem = PantryItem(
+            id: itemId,
+            name: name,
+            amount: amount,
+            expirationDate: expirationDate,
+            calories100g: calories100g,
+            weightKg: weightKg,
+            categories: categories,
+            excludeFromDateTracker: excludeFromDateTracker,
+            excludeFromCaloriesTracker: excludeFromCaloriesTracker
+        );
+      case ItemType.medicalItem:
+        newItem = MedicalItem(
+          id: itemId,
+          name: name,
+          amount: amount,
+          expirationDate: expirationDate,
+          excludeFromDateTracker: excludeFromDateTracker,
+        );
+      case ItemType.equipmentItem:
+        newItem = EquipmentItem(
+          id: itemId,
+          name: name,
+          amount: amount,
+          expirationDate: expirationDate,
+          excludeFromDateTracker: excludeFromDateTracker,
+        );
+    }
     //TODO: Error handling
     await _storageService.addItem(newItem);
   }
 
   /// Returns a list of all pantry items.
-  Future<List<PantryItem>> getAllItems() async {
-    final List<PantryItem> pantryList = await _storageService.getAllItems();
+  Future<List<T>> getAllItems() async {
+    final List<T> list = await _storageService.getAllItems() as List<T>;
     logger.i('Successfully called the getAllItems-method and returned a map');
-    return pantryList;
+    return list;
   }
 
 
   /// Returns a specific pantry item.
-  Future<PantryItem> getItem(int index) async {
+  Future<T> getItem(int index) async {
     logger.i('Successfully called the getItem-method for index: $index');
-    return pantryItems[index];
+    return items[index];
   }
+
 
   /// Required: name: [name], followed by propertyToUpdate: [newValue]
   /// Order doesn't matter.
@@ -100,12 +128,12 @@ class PantryRepository {
   /// updateItem(name: 'rice', excludeFromDateTracker: true, calories100g: 200);
   /// ```
   Future<void> updateItem({
-      required String name,
-      DateTime? expirationDate,
-      double? calories100g,
-      Map<FoodCategory, double>? categories,
-      bool? excludeFromDateTracker,
-      bool? excludeFromCaloriesTracker}) async {
+    required String name,
+    DateTime? expirationDate,
+    double? calories100g,
+    Map<FoodCategory, double>? categories,
+    bool? excludeFromDateTracker,
+    bool? excludeFromCaloriesTracker}) async {
     logger.i('Successfully called the updateItem-method for name: $name');
   }
 
@@ -113,12 +141,17 @@ class PantryRepository {
     if (itemToDelete is String) {
       final result = await _storageService.deleteItem(itemToDelete);
       logger.i(result);
-      pantryItems.removeWhere((item) => item.id == itemToDelete);
+      items.removeWhere((item) => item.id == itemToDelete);
     }
     if (itemToDelete is int){
       logger.i('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
-      pantryItems.removeAt(itemToDelete);
+      items.removeAt(itemToDelete);
     }
   }
 }
-*/
+
+enum ItemType {
+  pantryItem,
+  medicalItem,
+  equipmentItem
+}

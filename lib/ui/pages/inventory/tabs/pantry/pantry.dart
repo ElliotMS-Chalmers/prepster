@@ -19,7 +19,7 @@ class _PantryTabState extends State<PantryTab> {
   Widget build(BuildContext context) {
     return Consumer<PantryViewModel>(
       builder: (context, viewModel, child) {
-        List<PantryItem> items = viewModel.getAllItems();
+        List<PantryItem> items = viewModel.getAllItems() as List<PantryItem>;
 
         return Scaffold(
           body: ListView.builder(

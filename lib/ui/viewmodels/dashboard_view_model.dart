@@ -24,7 +24,7 @@ class DashboardViewModel extends ChangeNotifier {
   List<Map<String, Object>> getHousehold() => _household;
 
   void _loadItems() {
-    _items = _pantryVM!.getAllItems();
+    _items = _pantryVM!.getAllItems() as List<PantryItem>;
     notifyListeners();
   }
 
