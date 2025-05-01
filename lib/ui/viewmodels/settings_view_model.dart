@@ -61,7 +61,7 @@ class SettingsViewModel extends ChangeNotifier {
   }
 
   Future<bool> getNotifications() async {
-    return await _repository.getNotifications();
+    return await _repository.getNotificationsEnabled();
   }
 
   Future<void> setNotifications(bool value) async {

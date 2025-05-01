@@ -36,14 +36,14 @@ void main() {
     });
 
     test('Initial notifications are default', () async {
-      final notifications = await settingsRepo.getNotifications();
+      final notifications = await settingsRepo.getNotificationsEnabled();
       expect(notifications, DEFAULT_NOTIFICATIONS);
     });
 
     test('Set and get notifications', () async {
       const newNotifications = true;
       await settingsRepo.setNotifications(newNotifications);
-      final notifications = await settingsRepo.getNotifications();
+      final notifications = await settingsRepo.getNotificationsEnabled();
       expect(notifications, newNotifications);
     });
 

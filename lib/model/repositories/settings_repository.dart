@@ -55,7 +55,7 @@ class SettingsRepository {
 
   // Notification related
 
-  Future<bool> getNotifications() async {
+  Future<bool> getNotificationsEnabled() async {
     return _notificationsEnabled ??
         (await _fetchAndCache(_notificationKey, DEFAULT_NOTIFICATIONS)) ??
         DEFAULT_NOTIFICATIONS;
