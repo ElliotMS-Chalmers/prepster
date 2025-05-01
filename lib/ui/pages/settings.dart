@@ -33,6 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
     _selectedLanguage =
         Provider.of<SettingsViewModel>(context, listen: false).selectedLanguage;
   }
+
   // Function to add a family member
   void _addFamilyMember() async {
     final settingsViewModel = Provider.of<SettingsViewModel>(
@@ -42,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await settingsViewModel.addHouseholdMember(
       name: _nameController.text,
       birthYear:
-      DateTime.now().year -
+          DateTime.now().year -
           int.parse(_ageController.text), // assuming age is entered
       sex: _selectedGender,
     );
@@ -165,14 +166,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   viewModel.setSelectedLanguage(newValue);
                 },
                 items:
-                viewModel.availableLanguages.map<DropdownMenuItem<String>>((
-                    String languageCode,
+                    viewModel.availableLanguages.map<DropdownMenuItem<String>>((
+                      String languageCode,
                     ) {
-                  return DropdownMenuItem<String>(
-                    value: languageCode,
-                    child: Text(languageCode),
-                  );
-                }).toList(),
+                      return DropdownMenuItem<String>(
+                        value: languageCode,
+                        child: Text(languageCode),
+                      );
+                    }).toList(),
               ),
             ],
           ),
@@ -249,14 +250,15 @@ class _SettingsPageState extends State<SettingsPage> {
                       _selectedGender = newValue!;
                     });
                   },
-                  items: <String>['0', '1'].map<DropdownMenuItem<String>>((
-                      String value,
+                  items:
+                      <String>['0', '1'].map<DropdownMenuItem<String>>((
+                        String value,
                       ) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text('settings_sex_$value'.tr()),
-                    );
-                  }).toList(),
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text('settings_sex_$value'.tr()),
+                        );
+                      }).toList(),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
@@ -277,7 +279,7 @@ class _SettingsPageState extends State<SettingsPage> {
               return ListTile(
                 title: Text('${member['name']}'),
                 subtitle: Text(
-                  'Born: ${member['birthYear']} - ${'settings_sex_${member['sex']}'.tr()}',
+                  '${'settings_sex_${member['sex']}'.tr()}, ${DateTime.now().year - (member['birthYear'] as int)} ',
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
