@@ -31,5 +31,14 @@
   "settings_family_members_gender_title": "Kön",
   "settings_family_members_gender_list_male": "Man",
   "settings_family_members_gender_list_female": "Kvinna",
-  "settings_add_family_member": "Lägg till familjemedlem"
+  "settings_add_family_member": "Lägg till familjemedlem",
+  "settings_sex_0": "Kvinna",
+  "settings_sex_1": "Man",
+
+  "permission_required_title": "Behörighet krävs",
+  "permission_denied_message": "Behörighet för notiser nekades. Notiser kommer att vara inaktiverade.",
+  "permission_permanently_denied_message": "Behörighet för notiser är permanent nekad. Vänligen aktivera den i appinställningarna för att tillåta notiser.",
+  "ok_button": "OK",
+  "open_settings_button": "Öppna inställningar"
+
 }
