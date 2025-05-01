@@ -19,8 +19,8 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
 
-  // Gender options for the dropdown
-  String? _selectedGender = 'Male'; // Default value for gender
+  // Gender options for the dropdown - changed to use int values (0, 1)
+  String _selectedGender = '1'; // Default value for gender (1 = Male)
 
   // Language state
   String? _selectedLanguage;
@@ -42,9 +42,9 @@ class _SettingsPageState extends State<SettingsPage> {
     await settingsViewModel.addHouseholdMember(
       name: _nameController.text,
       birthYear:
-          DateTime.now().year -
+      DateTime.now().year -
           int.parse(_ageController.text), // assuming age is entered
-      sex: _selectedGender!,
+      sex: _selectedGender,
     );
 
     _nameController.clear();
@@ -165,14 +165,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   viewModel.setSelectedLanguage(newValue);
                 },
                 items:
-                    viewModel.availableLanguages.map<DropdownMenuItem<String>>((
-                      String languageCode,
+                viewModel.availableLanguages.map<DropdownMenuItem<String>>((
+                    String languageCode,
                     ) {
-                      return DropdownMenuItem<String>(
-                        value: languageCode,
-                        child: Text(languageCode),
-                      );
-                    }).toList(),
+                  return DropdownMenuItem<String>(
+                    value: languageCode,
+                    child: Text(languageCode),
+                  );
+                }).toList(),
               ),
             ],
           ),
@@ -237,7 +237,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     labelText: 'settings_family_members_age'.tr(),
                   ),
                 ),
-                // Gender Dropdown
+                // Gender Dropdown - Updated to use translation keys
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text('settings_family_members_gender_title'.tr()),
@@ -246,18 +246,17 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: _selectedGender,
                   onChanged: (String? newValue) {
                     setState(() {
-                      _selectedGender = newValue;
+                      _selectedGender = newValue!;
                     });
                   },
-                  items:
-                      <String>['Male', 'Female'].map<DropdownMenuItem<String>>((
-                        String value,
+                  items: <String>['0', '1'].map<DropdownMenuItem<String>>((
+                      String value,
                       ) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text('settings_sex_$value'.tr()),
+                    );
+                  }).toList(),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
@@ -278,7 +277,7 @@ class _SettingsPageState extends State<SettingsPage> {
               return ListTile(
                 title: Text('${member['name']}'),
                 subtitle: Text(
-                  'Born: ${member['birthYear']} - ${member['sex']}',
+                  'Born: ${member['birthYear']} - ${'settings_sex_${member['sex']}'.tr()}',
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
