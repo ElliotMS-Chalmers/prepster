@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class HouseholdListItem extends StatelessWidget {
@@ -30,10 +29,11 @@ class HouseholdListItem extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            if (age != null)
-              Text('${'dashboard_age'.tr()}$age'),
-            if (sex != null)
-              Text('dashboard_sex'.tr() + sex!),
+            if (sex != null || age != null)
+              Text(
+                '${sex ?? ''}${age != null ? ', $age' : ''}',
+                style: const TextStyle(fontSize: 16),
+              ),
           ],
         ),
       ),

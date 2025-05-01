@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:prepster/model/entities/inventory_item.dart';
 
 /// This class represents an item in the pantry.
 ///
@@ -20,12 +21,14 @@ part 'pantry_item.g.dart';
 // ##### IMPORTANT #####
 
 @JsonSerializable()
-class PantryItem {
+class PantryItem extends InventoryItem{
 
   // id will be generated at creation using Uuid().
+  @override
   String id;
 
   /// Required: Name of the pantry item.
+  @override
   String name;
 
   int? amount;

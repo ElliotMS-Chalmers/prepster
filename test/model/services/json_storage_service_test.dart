@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
-import 'package:prepster/model/services/json_storage_service.dart';
+import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:path/path.dart' as path;
 

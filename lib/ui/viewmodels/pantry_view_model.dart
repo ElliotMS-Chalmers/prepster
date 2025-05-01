@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/model/entities/inventory_item.dart';
+import 'package:prepster/model/repositories/inventory_repository.dart';
 
 import '../../model/entities/pantry_item.dart';
 import '../../model/repositories/pantry_repository.dart';
 
 class PantryViewModel extends ChangeNotifier {
-  final PantryRepository _repository;
+  final InventoryRepository _repository;
   List<PantryItem> _items = [];
 
   PantryViewModel(this._repository) {
     _loadItems();
   }
 
-  List<PantryItem> getAllItems() => _items;
+  List<InventoryItem> getAllItems() => _items;
 
   Future<void> _loadItems() async {
-    _items = await _repository.getAllItems();
+    _items = await _repository.getAllItems() as List<PantryItem>;
     notifyListeners();
   }
 
@@ -28,6 +30,7 @@ class PantryViewModel extends ChangeNotifier {
     double? weightKg,
   }) async {
     await _repository.addItem(
+      itemType: ItemType.pantryItem,
       name: name,
       expirationDate: expirationDate,
       calories100g: calories100g,

@@ -1,6 +1,19 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/repositories/settings_repository.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+
+// Enum to represent the result of setting notifications
+enum NotificationPermissionResult {
+  success,
+  permissionDenied,
+  permissionPermanentlyDenied,
+}
+
 
 class SettingsViewModel extends ChangeNotifier {
   final SettingsRepository _repository;
@@ -61,11 +74,37 @@ class SettingsViewModel extends ChangeNotifier {
   }
 
   Future<bool> getNotifications() async {
-    return await _repository.getNotifications();
+    return await _repository.getNotificationsEnabled();
   }
 
+  /*
   Future<void> setNotifications(bool value) async {
     await _repository.setNotifications(value);
+  }
+   */
+
+  Future<NotificationPermissionResult> setNotifications(bool value) async {
+    final notificationsOn = await _repository.getNotificationsEnabled();
+    if (notificationsOn == value) {
+      return NotificationPermissionResult.success;
+    }
+
+    if (value && defaultTargetPlatform == TargetPlatform.android) {
+      final status = await Permission.notification.status;
+      if (status.isDenied) {
+        final result = await Permission.notification.request();
+        if (!result.isGranted) {
+          return NotificationPermissionResult.permissionDenied;
+        }
+      } else if (status.isPermanentlyDenied) {
+        return NotificationPermissionResult.permissionPermanentlyDenied;
+      }
+
+    }
+
+    await _repository.setNotifications(value);
+    notifyListeners();
+    return NotificationPermissionResult.success;
   }
 
   Future<void> setDarkModeOn(bool value) async {

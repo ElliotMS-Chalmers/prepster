@@ -10,10 +10,10 @@
   "bottom_nav_settings": "Settings",
   "tooltip_add_pantry_item": "Add product to pantry",
   "dashboard_pantry_title": "Pantry Overview",
-  "total_calorie_text": "Total Calories in pantry: ",
-  "total_carbs_text": "Total Carbohydrates in pantry: ",
-  "total_protein_text": "Total Protein in pantry: ",
-  "total_fat_text": "Total Fat in pantry: ",
+  "total_calorie_text": "Calories: ",
+  "total_carbs_text": "Carbohydrates: ",
+  "total_protein_text": "Protein: ",
+  "total_fat_text": "Fat: ",
   "dashboard_age": "Age: ",
   "dashboard_sex": "Sex: ",
   "dashboard_no_household": "No household members added yet.",
@@ -31,5 +31,13 @@
   "settings_family_members_gender_title" : "Gender",
   "settings_family_members_gender_list_male" : "Male",
   "settings_family_members_gender_list_female" : "Female",
-  "settings_add_family_member" : "Add Family Member"
+  "settings_add_family_member" : "Add Family Member",
+  "settings_sex_0": "Female",
+  "settings_sex_1": "Male",
+
+  "permission_required_title": "Permission Required",
+  "permission_denied_message": "Notification permission was denied. Notifications will be disabled.",
+  "permission_permanently_denied_message": "Notification permission is permanently denied. Please enable it in app settings to allow notifications.",
+  "ok_button": "OK",
+  "open_settings_button": "Open Settings"
 }
