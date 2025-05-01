@@ -73,9 +73,9 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => PantryViewModel(PantryRepository())),
         ChangeNotifierProvider(create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)), child: SettingsPage(),),
-        ChangeNotifierProxyProvider2<PantryViewModel, SettingsViewModel,DashboardViewModel>(
+        ChangeNotifierProxyProvider2<PantryViewModel, SettingsViewModel, DashboardViewModel>(
           create: (_) => DashboardViewModel(null, null),
-          update: (_, pantryVM, settingsVM,previousDashboardVM) => DashboardViewModel(
+          update: (_, pantryVM, settingsVM, previousDashboardVM) => DashboardViewModel(
             pantryVM,
             settingsVM,
           ),

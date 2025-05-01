@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:prepster/ui/pages/inventory/tabs/medical.dart';
+import 'package:prepster/ui/pages/inventory/tabs/medicine/medical.dart';
 import 'package:prepster/ui/pages/inventory/tabs/pantry/pantry.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
 import '../../viewmodels/pantry_view_model.dart';
 import 'new_item_dialog_popup.dart';
-import 'tabs/equipment.dart';
+import 'tabs/equipment/equipment.dart';
 
 class InventoryPage extends StatefulWidget {
   InventoryPage({super.key});
@@ -15,8 +15,20 @@ class InventoryPage extends StatefulWidget {
   _InventoryPageState createState() => _InventoryPageState();
 }
 
-class _InventoryPageState extends State<InventoryPage> {
-  _InventoryPageState();
+class _InventoryPageState extends State<InventoryPage> with TickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   void _addPantryItem(
       String name,
@@ -59,49 +71,72 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 
   void _displayItemPopup() {
-    DateTime? selectedDate;
-    showDialog(
-      context: context,
-      builder:
-          (_) => NewItemDialogPopup(
-        selectedDate: selectedDate,
-        onSubmit: (name, calories, weight, carbs, protein, fat, date) {
-          _addPantryItem(name, calories, weight, carbs, protein, fat, date);
-          setState(() {
-            selectedDate = date;
-          });
-        },
-      ),
-    );
+    final currentTab = _tabController.index;
+
+    switch (currentTab) {
+      case 0: // Pantry tab
+        DateTime? selectedDate;
+        showDialog(
+          context: context,
+          builder: (_) => NewItemDialogPopup(
+            selectedDate: selectedDate,
+            onSubmit: (name, calories, weight, carbs, protein, fat, date) {
+              _addPantryItem(name, calories, weight, carbs, protein, fat, date);
+              setState(() {
+                selectedDate = date;
+              });
+            },
+          ),
+        );
+        break;
+      case 1: // Medicine tab
+      // Show medicine dialog here
+        showDialog(
+          context: context,
+          builder: (_) => const AlertDialog(
+            title: Text('Enter item info'),
+            content: Text('...'),
+          ),
+        );
+        break;
+      case 2: // Equipment tab
+        showDialog(
+          context: context,
+          builder: (_) => const AlertDialog(
+            title: Text('Enter item info'),
+            content: Text('...'),
+          ),
+        );
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('inventory_page_title'.tr()),
-          bottom: TabBar(
-            tabs: [
-              Tab(text: 'pantry_tab_name'.tr()),
-              Tab(text: 'medicine_tab_name'.tr()),
-              Tab(text: 'equipment_tab_name'.tr()),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            PantryTab(),
-            MedicalTab(),
-            EquipmentTab(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('inventory_page_title'.tr()),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(text: 'pantry_tab_name'.tr()),
+            Tab(text: 'medicine_tab_name'.tr()),
+            Tab(text: 'equipment_tab_name'.tr()),
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: _displayItemPopup,
-          tooltip: 'tooltip_add_pantry_item'.tr(),
-          child: const Icon(Icons.add),
-        ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          PantryTab(),
+          MedicalTab(),
+          EquipmentTab(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _displayItemPopup,
+        tooltip: 'tooltip_add_pantry_item'.tr(),
+        child: const Icon(Icons.add),
       ),
     );
   }
