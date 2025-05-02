@@ -73,6 +73,20 @@ class EquipmentJsonStorageService implements JsonStorageService<EquipmentItem>{
   }
 
   @override
+  Future<void> updateItem(String id, EquipmentItem updatedItem) async {
+    final equipmentMap = await _readEquipmentMap();
+    if (equipmentMap.containsKey(id)) {
+      final updatedItemJson = updatedItem.toJson(); // Convert the updated item to JSON
+      equipmentMap[id] = updatedItemJson; // Update the value for the given ID
+      await _saveEquipmentMap(equipmentMap);
+      logger.i('Item with ID "$id" updated in $_equipmentFileName');
+    } else {
+      logger.w('Item with ID "$id" not found in $_equipmentFileName. Update failed.');
+      // You might want to throw an error or handle this case differently
+    }
+  }
+
+  @override
   Future<String> deleteItem(String idToDelete) async {
     final equipmentMap = await _readEquipmentMap();
     if (equipmentMap.containsKey(idToDelete)) {

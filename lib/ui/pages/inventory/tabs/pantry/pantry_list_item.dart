@@ -1,17 +1,87 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:prepster/ui/pages/inventory/new_item_dialog_popup.dart';
 
+import '../../../../../model/entities/inventory_item.dart';
 import '../../../../../model/entities/pantry_item.dart';
+import '../../../../../model/repositories/inventory_repository.dart';
 import '../../../../widgets/list_item.dart';
 
 class PantryListItem extends StatelessWidget {
   final PantryItem item;
+  final String id;
   final void Function(String itemId) onDelete;
+  final void Function(
+      String itemId,
+      ItemType itemType,
+      String name,
+      int? amount,
+      DateTime? date,
+      double? calories,
+      double? weight,
+      Map<FoodCategory, double>? categories,
+      bool? excludeFromDateTracker,
+      bool? excludeFromCaloriesTracker) onEdit;
 
   const PantryListItem({
     super.key,
     required this.item,
+    required this.id,
     required this.onDelete,
+    required this.onEdit,
   });
+
+  void editItem(
+    String name,
+    String calories100g,
+    String weightKg,
+    String? carbs,
+    String? protein,
+    String? fat,
+    DateTime? date,
+  ) async {
+    final Map<FoodCategory, double> categories = {};
+
+    final parsedCarbs = double.tryParse(carbs ?? '');
+    if (parsedCarbs != null) {
+      categories[FoodCategory.carbohydrate] = parsedCarbs;
+    }
+
+    final parsedProtein = double.tryParse(protein ?? '');
+    if (parsedProtein != null) {
+      categories[FoodCategory.protein] = parsedProtein;
+    }
+
+    final parsedFat = double.tryParse(fat ?? '');
+    if (parsedFat != null) {
+      categories[FoodCategory.fat] = parsedFat;
+    }
+
+    onEdit
+  }
+
+  void displayDialogPopup() {
+    NewItemDialogPopup(
+      textController1: TextEditingController(text: item.name),
+      textController2: TextEditingController(
+        text: item.calories100g.toString(),
+      ),
+      textController3: TextEditingController(text: item.weightKg.toString()),
+      textController4: TextEditingController(
+        text: item.categories?[FoodCategory.carbohydrate].toString(),
+      ),
+      textController5: TextEditingController(
+        text: item.categories?[FoodCategory.protein].toString(),
+      ),
+      textController6: TextEditingController(
+        text: item.categories?[FoodCategory.fat].toString(),
+      ),
+      selectedDate: item.expirationDate,
+      onSubmit: (name, calories, weight, carbs, protein, fat, date) {
+        editItem(name, calories, weight, carbs, protein, fat, date);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,15 +114,17 @@ class PantryListItem extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+              FloatingActionButton(
+                onPressed: displayDialogPopup,
+                tooltip: 'edit_button'.tr(),
+                child: const Icon(Icons.edit),
+              ),
             ],
           ),
           const SizedBox(width: 8),
           Text(
             "${item.weightKg ?? 0} kg",
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
-            ),
+            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -62,22 +134,19 @@ class PantryListItem extends StatelessWidget {
             (item.calories100g != null && item.weightKg != null)
                 ? "${(item.calories100g! * item.weightKg! * 10).toStringAsFixed(1)} kcal"
                 : "",
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
-            ),
+            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
           ),
           const SizedBox(width: 8),
           Text(
-              "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)}g carbs"
+            "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)}g carbs",
           ),
           const SizedBox(width: 8),
           Text(
-              "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)}g protein"
+            "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)}g protein",
           ),
           const SizedBox(width: 8),
           Text(
-              "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)}g fat"
+            "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)}g fat",
           ),
         ],
       ),

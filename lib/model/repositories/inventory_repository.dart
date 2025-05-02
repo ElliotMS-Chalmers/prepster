@@ -128,25 +128,85 @@ class InventoryRepository<T extends InventoryItem> {
   /// updateItem(name: 'rice', excludeFromDateTracker: true, calories100g: 200);
   /// ```
   Future<void> updateItem({
+    required String id, //Identifier that will be used for service
+    required ItemType itemType,
     required String name,
+    int? amount,
     DateTime? expirationDate,
     double? calories100g,
+    double? weightKg,
     Map<FoodCategory, double>? categories,
     bool? excludeFromDateTracker,
     bool? excludeFromCaloriesTracker}) async {
-    logger.i('Successfully called the updateItem-method for name: $name');
+
+      InventoryItem updatedItem;
+
+      if (name.length > 50){
+        throw ArgumentError('Name cannot be longer than 50 characters');
+      }
+
+      amount ??= 1;
+
+      if (expirationDate == null){
+        excludeFromDateTracker = true;
+      }
+
+      if (calories100g == null){
+        excludeFromCaloriesTracker = true;
+      }
+
+      // The ??= replaces if-statements to check for null-values
+      // If the value isn't null then the value won't be changed
+      if (weightKg != null && weightKg.isNegative){
+        throw ArgumentError('Weight cannot be negative');
+      }
+
+      categories ??= <FoodCategory, double>{};
+      for (var category in FoodCategory.values) {
+        categories.putIfAbsent(category, () => 0.0);
+      }
+
+      excludeFromDateTracker ??= false;
+      excludeFromCaloriesTracker ??= false;
+
+      switch (itemType) {
+        case ItemType.pantryItem:
+          updatedItem = PantryItem(
+              id: id,
+              name: name,
+              amount: amount,
+              expirationDate: expirationDate,
+              calories100g: calories100g,
+              weightKg: weightKg,
+              categories: categories,
+              excludeFromDateTracker: excludeFromDateTracker,
+              excludeFromCaloriesTracker: excludeFromCaloriesTracker
+          );
+        case ItemType.medicalItem:
+          updatedItem = MedicalItem(
+            id: id,
+            name: name,
+            amount: amount,
+            expirationDate: expirationDate,
+            excludeFromDateTracker: excludeFromDateTracker,
+          );
+        case ItemType.equipmentItem:
+          updatedItem = EquipmentItem(
+            id: id,
+            name: name,
+            amount: amount,
+            expirationDate: expirationDate,
+            excludeFromDateTracker: excludeFromDateTracker,
+          );
+      }
+
+      await _storageService.updateItem(id, updatedItem);
   }
 
-  Future<void> deleteItem<T>(T itemToDelete) async {
-    if (itemToDelete is String) {
-      final result = await _storageService.deleteItem(itemToDelete);
-      logger.i(result);
-      items.removeWhere((item) => item.id == itemToDelete);
-    }
-    if (itemToDelete is int){
-      logger.i('Successfully called the deleteItem-method and parsed\n the index: $itemToDelete');
-      items.removeAt(itemToDelete);
-    }
+  Future<void> deleteItem(String itemToDelete) async {
+    final result = await _storageService.deleteItem(itemToDelete);
+    logger.i(result);
+    items.removeWhere((item) => item.id == itemToDelete);
   }
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/model/repositories/inventory_repository.dart';
 import 'package:provider/provider.dart';
 
 import 'package:prepster/model/entities/pantry_item.dart';
@@ -29,6 +30,8 @@ class _PantryTabState extends State<PantryTab> {
               PantryItem item = items[index];
               return PantryListItem(
                 item: item,
+                id: item.id,
+                onEdit: viewModel.updateItem,
                 //index: index,
                 onDelete: (i) => viewModel.deleteItem(i),
               );
