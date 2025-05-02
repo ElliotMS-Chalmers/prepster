@@ -162,6 +162,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedLanguage = newValue;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Restart required for changes to take effect')),
+                    );
                   });
                   viewModel.setSelectedLanguage(newValue);
                 },
