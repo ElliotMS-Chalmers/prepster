@@ -31,6 +31,7 @@ class PantryItem extends InventoryItem{
   @override
   String name;
 
+  @override
   int? amount;
 
   /// Optional: Expiration date.

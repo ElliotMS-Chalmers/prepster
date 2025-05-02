@@ -39,5 +39,6 @@
   "permission_denied_message": "Notification permission was denied. Notifications will be disabled.",
   "permission_permanently_denied_message": "Notification permission is permanently denied. Please enable it in app settings to allow notifications.",
   "ok_button": "OK",
-  "open_settings_button": "Open Settings"
+  "open_settings_button": "Open Settings",
+  "edit_button": "Edit"
 }

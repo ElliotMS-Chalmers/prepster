@@ -71,6 +71,20 @@ class PantryJsonStorageService implements JsonStorageService<PantryItem>{
   }
 
   @override
+  Future<void> updateItem(String id, PantryItem updatedItem) async {
+    final pantryMap = await _readPantryMap();
+    if (pantryMap.containsKey(id)) {
+      final updatedItemJson = updatedItem.toJson(); // Convert the updated item to JSON
+      pantryMap[id] = updatedItemJson; // Update the value for the given ID
+      await _savePantryMap(pantryMap);
+      logger.i('Item with ID "$id" updated in $_pantryFileName');
+    } else {
+      logger.w('Item with ID "$id" not found in $_pantryFileName. Update failed.');
+      // You might want to throw an error or handle this case differently
+    }
+  }
+
+  @override
   Future<String> deleteItem(String idToDelete) async {
     final pantryMap = await _readPantryMap();
     if (pantryMap.containsKey(idToDelete)) {
