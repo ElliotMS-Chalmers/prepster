@@ -5,21 +5,14 @@ import 'package:prepster/model/entities/pantry_item.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 import 'package:prepster/ui/pages/inventory/tabs/pantry/pantry_list_item.dart';
 
-class PantryTab extends StatefulWidget {
-  PantryTab({super.key});
-
-  @override
-  _PantryTabState createState() => _PantryTabState();
-}
-
-class _PantryTabState extends State<PantryTab> {
-  _PantryTabState();
+class PantryTab extends StatelessWidget {
+  const PantryTab({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PantryViewModel>(
       builder: (context, viewModel, child) {
-        List<PantryItem> items = viewModel.getAllItems() as List<PantryItem>;
+        List<PantryItem> items = viewModel.getAllItems();
 
         return Scaffold(
           body: ListView.builder(

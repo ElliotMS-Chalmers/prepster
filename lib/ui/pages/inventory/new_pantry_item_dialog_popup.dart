@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class NewItemDialogPopup extends StatefulWidget {
+class NewPantryItemDialogPopup extends StatefulWidget {
   final TextEditingController _textController1 = TextEditingController();
   final TextEditingController _textController2 = TextEditingController();
   final TextEditingController _textController3 = TextEditingController();
@@ -11,17 +11,17 @@ class NewItemDialogPopup extends StatefulWidget {
   final DateTime? selectedDate;
   final void Function(String name, String calories, String weight, String carbs, String protein, String fat, DateTime date) onSubmit;
 
-  NewItemDialogPopup({
+  NewPantryItemDialogPopup({
     super.key,
     required this.selectedDate,
     required this.onSubmit,
   });
 
   @override
-  State<NewItemDialogPopup> createState() => _NewItemDialogPopupState();
+  State<NewPantryItemDialogPopup> createState() => _NewPantryItemDialogPopupState();
 }
 
-class _NewItemDialogPopupState extends State<NewItemDialogPopup> {
+class _NewPantryItemDialogPopupState extends State<NewPantryItemDialogPopup> {
   late DateTime? _selectedDate;
 
   @override

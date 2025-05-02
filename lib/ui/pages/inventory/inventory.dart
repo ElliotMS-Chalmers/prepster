@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:prepster/ui/pages/inventory/tabs/medicine/medical.dart';
-import 'package:prepster/ui/pages/inventory/tabs/pantry/pantry.dart';
+import 'package:prepster/ui/pages/inventory/new_equipment_item_dialog_popup.dart';
+import 'package:prepster/ui/pages/inventory/new_medical_item_dialog_popup.dart';
+import 'package:prepster/ui/pages/inventory/tabs/medicine/medical_tab.dart';
+import 'package:prepster/ui/pages/inventory/tabs/pantry/pantry_tab.dart';
+import 'package:prepster/ui/viewmodels/medical_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:prepster/model/entities/pantry_item.dart';
+import '../../viewmodels/equipment_view_model.dart';
 import '../../viewmodels/pantry_view_model.dart';
-import 'new_item_dialog_popup.dart';
-import 'tabs/equipment/equipment.dart';
+import 'new_pantry_item_dialog_popup.dart';
+import 'tabs/equipment/equipment_tab.dart';
 
 class InventoryPage extends StatefulWidget {
   InventoryPage({super.key});
@@ -70,6 +74,42 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
     );
   }
 
+  void _addMedicalItem(
+      String name,
+      String amount,
+      DateTime? date,
+      ) {
+    final medicalViewModel = Provider.of<MedicalViewModel>(
+      context,
+      listen: false,
+    );
+
+    medicalViewModel.addItem(
+      name: name,
+      amount: int.parse(amount),
+      expirationDate: date
+    );
+
+  }
+
+  void _addEquipmentItem(
+      String name,
+      String amount,
+      DateTime? date,
+      ) {
+    final equipmentViewModel = Provider.of<EquipmentViewModel>(
+      context,
+      listen: false,
+    );
+
+    equipmentViewModel.addItem(
+        name: name,
+        amount: int.parse(amount),
+        expirationDate: date
+    );
+
+  }
+
   void _displayItemPopup() {
     final currentTab = _tabController.index;
 
@@ -78,7 +118,7 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
         DateTime? selectedDate;
         showDialog(
           context: context,
-          builder: (_) => NewItemDialogPopup(
+          builder: (_) => NewPantryItemDialogPopup(
             selectedDate: selectedDate,
             onSubmit: (name, calories, weight, carbs, protein, fat, date) {
               _addPantryItem(name, calories, weight, carbs, protein, fat, date);
@@ -90,21 +130,32 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
         );
         break;
       case 1: // Medicine tab
-      // Show medicine dialog here
+        DateTime? selectedDate;
         showDialog(
           context: context,
-          builder: (_) => const AlertDialog(
-            title: Text('Enter item info'),
-            content: Text('...'),
+          builder: (_) => NewMedicalItemDialogPopup(
+            selectedDate: selectedDate,
+            onSubmit: (name, amount, date) {
+              _addMedicalItem(name, amount, date);
+              setState(() {
+                selectedDate = date;
+              });
+            },
           ),
         );
         break;
       case 2: // Equipment tab
+        DateTime? selectedDate;
         showDialog(
           context: context,
-          builder: (_) => const AlertDialog(
-            title: Text('Enter item info'),
-            content: Text('...'),
+          builder: (_) => NewEquipmentItemDialogPopup(
+            selectedDate: selectedDate,
+            onSubmit: (name, amount, date) {
+              _addEquipmentItem(name, amount, date);
+              setState(() {
+                selectedDate = date;
+              });
+            },
           ),
         );
         break;

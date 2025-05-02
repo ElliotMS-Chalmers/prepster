@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/model/entities/medical_item.dart';
 
 import '../../../../widgets/list_item.dart';
 
 class MedicalListItem extends StatelessWidget {
-  final int index;
+  final MedicalItem item;
   final void Function(String itemId) onDelete;
 
   const MedicalListItem({
     super.key,
-    required this.index,
+    required this.item,
     required this.onDelete,
   });
 
@@ -17,10 +18,44 @@ class MedicalListItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return ListItem(
-      id: index.toString(),
+      id: item.id,
       onDismissed: onDelete,
-      expandedContent: Text("expanded test"),
-      headerContent:Text("test item")
+      headerContent: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                item.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              Text(
+                item.expirationDate != null
+                    ? item.expirationDate!.toString().split(" ")[0]
+                    : "",
+                style: TextStyle(
+                  color: colorScheme.onSurfaceVariant,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+          Text(
+            "${item.amount}",
+            style: TextStyle(
+              fontSize: 14,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

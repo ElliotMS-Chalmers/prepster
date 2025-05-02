@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:prepster/model/entities/equipment_item.dart';
 import 'package:prepster/model/entities/inventory_item.dart';
+import 'package:prepster/model/entities/medical_item.dart';
 import 'package:prepster/model/repositories/inventory_repository.dart';
+import 'package:prepster/model/services/equipment_json_storage_service.dart';
 import 'package:prepster/model/services/json_storage_service.dart';
 import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
+import 'package:prepster/ui/viewmodels/equipment_view_model.dart';
+import 'package:prepster/ui/viewmodels/medical_view_model.dart';
 
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -11,6 +16,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'model/entities/pantry_item.dart';
 import 'model/repositories/pantry_repository.dart';
 import 'model/repositories/settings_repository.dart';
+import 'model/services/medical_json_storage_service.dart';
 import 'model/services/settings_service.dart';
 
 import 'package:prepster/ui/pages/dashboard/dashboard.dart';
@@ -77,6 +83,8 @@ class App extends StatelessWidget {
       home: MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => PantryViewModel(InventoryRepository<PantryItem>(PantryJsonStorageService.instance))),
+        ChangeNotifierProvider(create: (_) => MedicalViewModel(InventoryRepository<MedicalItem>(MedicalJsonStorageService.instance))),
+        ChangeNotifierProvider(create: (_) => EquipmentViewModel(InventoryRepository<EquipmentItem>(EquipmentJsonStorageService.instance))),
         ChangeNotifierProvider(create: (_) => SettingsViewModel(SettingsRepository(SettingsService.instance)), child: SettingsPage(),),
         ChangeNotifierProxyProvider2<PantryViewModel, SettingsViewModel, DashboardViewModel>(
           create: (_) => DashboardViewModel(null, null),
