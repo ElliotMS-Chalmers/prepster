@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/equipment_item.dart';
-import 'package:prepster/model/entities/inventory_item.dart';
 import 'package:prepster/model/entities/medical_item.dart';
 import 'package:prepster/model/repositories/inventory_repository.dart';
 import 'package:prepster/model/services/equipment_json_storage_service.dart';
-import 'package:prepster/model/services/json_storage_service.dart';
 import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:prepster/ui/viewmodels/equipment_view_model.dart';
@@ -13,10 +11,10 @@ import 'package:prepster/ui/viewmodels/medical_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import 'model/entities/medical_item.dart';
 import 'model/entities/pantry_item.dart';
 import 'model/repositories/settings_repository.dart';
 import 'model/services/medical_json_storage_service.dart';
+import 'model/services/notification_service.dart';
 import 'model/services/settings_service.dart';
 
 import 'package:prepster/ui/pages/dashboard/dashboard.dart';
@@ -39,6 +37,15 @@ void main() async {
   await settings.initializeCache();
   final themeProvider = ThemeProvider(settings);
   await themeProvider.loadTheme();
+
+  if (await settings.getNotificationsEnabled()){
+    // Add more storage to scan for expiration dates here
+    var storageFiles = {'pantry_data.json'};
+    var notifyDaysBefore = await settings.getNotifyDaysBefore();
+    // var notifyDaysBefore = 3; // For testing purposes
+    NotificationService(storageFiles, notifyDaysBefore);
+  }
+
 
   runApp(
     EasyLocalization(

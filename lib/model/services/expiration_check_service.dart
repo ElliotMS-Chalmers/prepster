@@ -5,6 +5,8 @@ class ExpirationCheckService {
   final String basePath;
   final String filename;
 
+  final int bufferDays = 90;
+
   // Filename (for json file) and optional basePath for testing
   ExpirationCheckService(
     this.filename, {
@@ -62,7 +64,7 @@ class ExpirationCheckService {
 
             // Include items expiring within notifyDaysBefore days
             if (daysUntilExpiration >= 0 &&
-                daysUntilExpiration <= notifyDaysBefore) {
+                daysUntilExpiration <= notifyDaysBefore+bufferDays) {
               // Convert expirationDate to YYYY-MM-DD string
               final String expirationDateString =
                   expirationDate.toString().split(' ')[0];

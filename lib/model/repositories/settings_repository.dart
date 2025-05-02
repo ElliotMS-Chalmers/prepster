@@ -63,17 +63,16 @@ class SettingsRepository {
         DEFAULT_NOTIFICATIONS;
   }
 
-  Future<String> getNotifyDaysBefore() async {
+  Future<int> getNotifyDaysBefore() async {
     final cachedValue = _notifyDaysBefore;
     if (cachedValue != null) {
-      return cachedValue.toString();
+      return cachedValue;
     }
     final fetchedValue = await _fetchAndCache<int>(
       _notifyDaysBeforeKey,
       int.parse(DEFAULT_NOTIFY_DAYS_BEFORE),
     );
-    return fetchedValue?.toString() ??
-        DEFAULT_NOTIFY_DAYS_BEFORE; // Added null-aware fallback
+    return fetchedValue ?? int.parse(DEFAULT_NOTIFY_DAYS_BEFORE); // Added null-aware fallback
   }
 
 
