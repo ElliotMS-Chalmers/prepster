@@ -31,7 +31,20 @@ class _PantryTabState extends State<PantryTab> {
               return PantryListItem(
                 item: item,
                 id: item.id,
-                onEdit: viewModel.updateItem,
+                onEdit: (id, itemType, name, amount, date, calories, weight, categories, excludeFromDateTracker, excludeFromCaloriesTracker) {
+                  viewModel.updateItem(
+                    id: id,
+                    itemType: itemType,
+                    name: name,
+                    amount: amount,
+                    expirationDate: date,
+                    calories100g: calories,
+                    weightKg: weight,
+                    categories: categories,
+                    excludeFromDateTracker: excludeFromDateTracker,
+                    excludeFromCaloriesTracker: excludeFromCaloriesTracker,
+                  );
+                },
                 //index: index,
                 onDelete: (i) => viewModel.deleteItem(i),
               );

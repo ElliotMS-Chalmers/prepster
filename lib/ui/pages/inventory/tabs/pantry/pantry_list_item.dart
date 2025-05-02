@@ -57,29 +57,31 @@ class PantryListItem extends StatelessWidget {
       categories[FoodCategory.fat] = parsedFat;
     }
 
-    onEdit
+    onEdit(id, ItemType.pantryItem, name, item.amount, date, double.parse(calories100g), double.parse(weightKg), categories, item.excludeFromDateTracker, item.excludeFromCaloriesTracker);
   }
 
-  void displayDialogPopup() {
-    NewItemDialogPopup(
-      textController1: TextEditingController(text: item.name),
-      textController2: TextEditingController(
-        text: item.calories100g.toString(),
-      ),
-      textController3: TextEditingController(text: item.weightKg.toString()),
-      textController4: TextEditingController(
-        text: item.categories?[FoodCategory.carbohydrate].toString(),
-      ),
-      textController5: TextEditingController(
-        text: item.categories?[FoodCategory.protein].toString(),
-      ),
-      textController6: TextEditingController(
-        text: item.categories?[FoodCategory.fat].toString(),
-      ),
-      selectedDate: item.expirationDate,
-      onSubmit: (name, calories, weight, carbs, protein, fat, date) {
-        editItem(name, calories, weight, carbs, protein, fat, date);
-      },
+  void displayDialogPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => NewItemDialogPopup(
+          textController1: TextEditingController(text: item.name),
+          textController2: TextEditingController(text: item.calories100g?.toString() ?? ''),
+          textController3: TextEditingController(text: item.weightKg?.toString() ?? ''),
+          textController4: TextEditingController(
+            text: item.categories?[FoodCategory.carbohydrate]?.toString() ?? '',
+          ),
+          textController5: TextEditingController(
+            text: item.categories?[FoodCategory.protein]?.toString() ?? '',
+          ),
+          textController6: TextEditingController(
+            text: item.categories?[FoodCategory.fat]?.toString() ?? '',
+          ),
+          selectedDate: item.expirationDate,
+          onSubmit: (name, calories, weight, carbs, protein, fat, date) {
+            editItem(name, calories, weight, carbs, protein, fat, date);
+            //Navigator.of(context).pop(); // close the dialog
+          },
+        ),
     );
   }
 
@@ -114,17 +116,22 @@ class PantryListItem extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              FloatingActionButton(
-                onPressed: displayDialogPopup,
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${item.weightKg ?? 0} kg",
+                style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(width: 8),
+              FloatingActionButton.small(
+                onPressed: () => displayDialogPopup(context),
                 tooltip: 'edit_button'.tr(),
                 child: const Icon(Icons.edit),
               ),
             ],
-          ),
-          const SizedBox(width: 8),
-          Text(
-            "${item.weightKg ?? 0} kg",
-            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),
