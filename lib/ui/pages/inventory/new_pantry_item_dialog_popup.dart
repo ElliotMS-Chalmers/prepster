@@ -2,20 +2,31 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class NewPantryItemDialogPopup extends StatefulWidget {
-  final TextEditingController _textController1 = TextEditingController();
-  final TextEditingController _textController2 = TextEditingController();
-  final TextEditingController _textController3 = TextEditingController();
-  final TextEditingController _textController4 = TextEditingController();
-  final TextEditingController _textController5 = TextEditingController();
-  final TextEditingController _textController6 = TextEditingController();
+  final TextEditingController textController1;
+  final TextEditingController textController2;
+  final TextEditingController textController3;
+  final TextEditingController textController4;
+  final TextEditingController textController5;
+  final TextEditingController textController6;
   final DateTime? selectedDate;
-  final void Function(String name, String calories, String weight, String carbs, String protein, String fat, DateTime date) onSubmit;
+  final void Function(String name, String calories, String weight, String? carbs, String? protein, String? fat, DateTime? date) onSubmit;
 
   NewPantryItemDialogPopup({
     super.key,
+    TextEditingController? textController1,
+    TextEditingController? textController2,
+    TextEditingController? textController3,
+    TextEditingController? textController4,
+    TextEditingController? textController5,
+    TextEditingController? textController6,
     required this.selectedDate,
     required this.onSubmit,
-  });
+  }) :  textController1 = textController1 ?? TextEditingController(),
+        textController2 = textController2 ?? TextEditingController(),
+        textController3 = textController3 ?? TextEditingController(),
+        textController4 = textController4 ?? TextEditingController(),
+        textController5 = textController5 ?? TextEditingController(),
+        textController6 = textController6 ?? TextEditingController();
 
   @override
   State<NewPantryItemDialogPopup> createState() => _NewPantryItemDialogPopupState();
@@ -38,27 +49,27 @@ class _NewPantryItemDialogPopupState extends State<NewPantryItemDialogPopup> {
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: widget._textController1,
+            controller: widget.textController1,
             decoration: const InputDecoration(labelText: 'Name'),
           ),
           TextField(
-            controller: widget._textController2,
+            controller: widget.textController2,
             decoration: const InputDecoration(labelText: 'Calories per 100g'),
           ),
           TextField(
-            controller: widget._textController3,
+            controller: widget.textController3,
             decoration: const InputDecoration(labelText: 'Weight in kg'),
           ),
           TextField(
-            controller: widget._textController4,
+            controller: widget.textController4,
             decoration: const InputDecoration(labelText: 'Carbohydrates per 100g'),
           ),
           TextField(
-            controller: widget._textController5,
+            controller: widget.textController5,
             decoration: const InputDecoration(labelText: 'Protein per 100g'),
           ),
           TextField(
-            controller: widget._textController6,
+            controller: widget.textController6,
             decoration: const InputDecoration(labelText: 'Fat per 100g'),
           ),
           TextFormField(
@@ -97,18 +108,17 @@ class _NewPantryItemDialogPopupState extends State<NewPantryItemDialogPopup> {
         ),
         ElevatedButton(
           onPressed: () {
-            if (widget._textController1.text.isNotEmpty &&
-                widget._textController2.text.isNotEmpty &&
-                widget._textController3.text.isNotEmpty &&
-                _selectedDate != null) {
+            if (widget.textController1.text.isNotEmpty &&
+                widget.textController2.text.isNotEmpty &&
+                widget.textController3.text.isNotEmpty) {
               widget.onSubmit(
-                widget._textController1.text,
-                widget._textController2.text,
-                widget._textController3.text,
-                widget._textController4.text,
-                widget._textController5.text,
-                widget._textController6.text,
-                _selectedDate!,
+                widget.textController1.text,
+                widget.textController2.text,
+                widget.textController3.text,
+                widget.textController4.text,
+                widget.textController5.text,
+                widget.textController6.text,
+                _selectedDate,
               );
               Navigator.pop(context);
             } else {

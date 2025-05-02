@@ -27,6 +27,32 @@ class PantryViewModel extends InventoryViewModel<PantryItem> {
     );
     await loadItems();
   }
-}
 
+  Future<void> updateItem({
+    required String id, //Identifier that will be used for service
+    required ItemType itemType,
+    required String name,
+    int? amount,
+    DateTime? expirationDate,
+    double? calories100g,
+    double? weightKg,
+    Map<FoodCategory, double>? categories,
+    bool? excludeFromDateTracker,
+    bool? excludeFromCaloriesTracker,
+  }) async {
+    await repository.updateItem(
+      id: id,
+      itemType: itemType,
+      name: name,
+      amount: amount,
+      expirationDate: expirationDate,
+      calories100g: calories100g,
+      weightKg: weightKg,
+      categories: categories,
+      excludeFromCaloriesTracker: excludeFromCaloriesTracker,
+      excludeFromDateTracker: excludeFromDateTracker,
+    );
+    await loadItems();
+  }
+}
 

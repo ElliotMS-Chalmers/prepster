@@ -73,6 +73,20 @@ class MedicalJsonStorageService implements JsonStorageService<MedicalItem>{
   }
 
   @override
+  Future<void> updateItem(String id, MedicalItem updatedItem) async {
+    final medicalMap = await _readMedicalMap();
+    if (medicalMap.containsKey(id)) {
+      final updatedItemJson = updatedItem.toJson(); // Convert the updated item to JSON
+      medicalMap[id] = updatedItemJson; // Update the value for the given ID
+      await _saveMedicalMap(medicalMap);
+      logger.i('Item with ID "$id" updated in $_medicalFileName');
+    } else {
+      logger.w('Item with ID "$id" not found in $_medicalFileName. Update failed.');
+      // You might want to throw an error or handle this case differently
+    }
+  }
+
+  @override
   Future<String> deleteItem(String idToDelete) async {
     final medicalMap = await _readMedicalMap();
     if (medicalMap.containsKey(idToDelete)) {

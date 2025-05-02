@@ -13,8 +13,8 @@ import 'package:prepster/ui/viewmodels/medical_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 
+import 'model/entities/medical_item.dart';
 import 'model/entities/pantry_item.dart';
-import 'model/repositories/pantry_repository.dart';
 import 'model/repositories/settings_repository.dart';
 import 'model/services/medical_json_storage_service.dart';
 import 'model/services/settings_service.dart';
