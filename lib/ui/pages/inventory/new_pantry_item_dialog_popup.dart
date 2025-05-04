@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'search_pantry_item.dart';
 
 class NewPantryItemDialogPopup extends StatefulWidget {
   final TextEditingController textController1;
@@ -48,10 +49,40 @@ class _NewPantryItemDialogPopupState extends State<NewPantryItemDialogPopup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(
-            controller: widget.textController1,
-            decoration: const InputDecoration(labelText: 'Name'),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: widget.textController1,
+                  decoration: const InputDecoration(labelText: 'Name'),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () async {
+                  final selected = await Navigator.push<SelectedFood>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchPage(initialQuery: widget.textController1.text),
+                    ),
+                  );
+
+                  if (selected != null) {
+                    setState(() {
+                      widget.textController1.text = selected.name;
+
+                      final nutrients = selected.nutrients;
+                      widget.textController2.text = nutrients['Energi']?.toStringAsFixed(0) ?? '';
+                      widget.textController4.text = nutrients['Kolhydrater']?.toString() ?? '';
+                      widget.textController5.text = nutrients['Protein']?.toString() ?? '';
+                      widget.textController6.text = nutrients['Fett']?.toString() ?? '';
+                    });
+                  }
+                },
+              ),
+            ],
           ),
+
           TextField(
             controller: widget.textController2,
             decoration: const InputDecoration(labelText: 'Calories per 100g'),
