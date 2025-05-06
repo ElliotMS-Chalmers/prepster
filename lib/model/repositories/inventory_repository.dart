@@ -3,6 +3,7 @@ import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:prepster/utils/logger.dart';
 
+import '../../utils/default_settings.dart';
 import '../entities/equipment_item.dart';
 import '../entities/inventory_item.dart';
 import '../entities/medical_item.dart';
@@ -43,8 +44,8 @@ class InventoryRepository<T extends InventoryItem> {
 
     final itemId = Uuid().v4();
 
-    if (name.length > 50){
-      throw ArgumentError('Name cannot be longer than 50 characters');
+    if (name.length > MAXIMUM_ALLOWED_NAME_LENGTH){
+      throw ArgumentError('Name cannot be longer than $MAXIMUM_ALLOWED_NAME_LENGTH characters');
     }
 
     amount ??= 1;

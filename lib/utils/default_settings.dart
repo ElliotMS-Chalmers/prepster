@@ -6,6 +6,7 @@ const bool DEFAULT_NOTIFICATIONS = false;
 const bool DEFAULT_DARKMODE_ENABLED = false;
 const String DEFAULT_NOTIFY_DAYS_BEFORE = '30';
 const List<String> SUPPORTED_LANGUAGES = ['en', 'sv'];
+const int MAXIMUM_ALLOWED_NAME_LENGTH = 100;
 
 const String TRANSLATIONS_PATH = 'assets/translations';
 
