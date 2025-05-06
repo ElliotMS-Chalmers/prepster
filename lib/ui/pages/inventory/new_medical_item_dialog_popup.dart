@@ -5,7 +5,7 @@ class NewMedicalItemDialogPopup extends StatefulWidget {
   final TextEditingController _textController1 = TextEditingController();
   final TextEditingController _textController2 = TextEditingController();
   final DateTime? selectedDate;
-  final void Function(String name, String amount, DateTime date) onSubmit;
+  final void Function(String name, String amount, DateTime? date) onSubmit;
 
   NewMedicalItemDialogPopup({
     super.key,
@@ -78,12 +78,11 @@ class _NewMedicalItemDialogPopupState extends State<NewMedicalItemDialogPopup> {
         ElevatedButton(
           onPressed: () {
             if (widget._textController1.text.isNotEmpty &&
-                widget._textController2.text.isNotEmpty &&
-                _selectedDate != null) {
+                widget._textController2.text.isNotEmpty) {
               widget.onSubmit(
                 widget._textController1.text,
                 widget._textController2.text,
-                _selectedDate!,
+                _selectedDate,
               );
               Navigator.pop(context);
             } else {
