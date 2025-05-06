@@ -13,6 +13,22 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
+  Widget _buildFamilyMemberTile(Map member) {
+    final age = DateTime.now().year - (member['birthYear'] as int);
+    final gender = 'settings_sex_${member['sex']}'.tr();
+
+    return ListTile(
+      leading: const Icon(Icons.person),
+      title: Text(member['name']),
+      subtitle: Text('$gender, $age'),
+      trailing: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () => _removeFamilyMember(member['id'].toString()),
+      ),
+    );
+  }
+
   late bool _isNotificationsEnabled;
 
   // Text controllers for adding family members
@@ -146,150 +162,153 @@ class _SettingsPageState extends State<SettingsPage> {
     final household = viewModel.getHousehold();
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text('bottom_nav_settings'.tr())),
       body: ListView(
         children: [
           // Language Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('settings_language_list'.tr()),
-              ),
-              DropdownButton<String>(
-                value: _selectedLanguage,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedLanguage = newValue;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Restart required for changes to take effect')),
-                    );
-                  });
-                  viewModel.setSelectedLanguage(newValue);
-                },
-                items:
-                    viewModel.availableLanguages.map<DropdownMenuItem<String>>((
-                      String languageCode,
-                    ) {
+          Card(
+            margin: const EdgeInsets.all(12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text('settings_language_list'.tr()),
+                  trailing: DropdownButton<String>(
+                    value: _selectedLanguage,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedLanguage = newValue;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Restart required for changes to take effect')),
+                        );
+                      });
+                      viewModel.setSelectedLanguage(newValue);
+                    },
+                    items: viewModel.availableLanguages.map<DropdownMenuItem<String>>((String languageCode) {
                       return DropdownMenuItem<String>(
                         value: languageCode,
                         child: Text(languageCode),
                       );
                     }).toList(),
-              ),
-            ],
-          ),
-
-          // Notifications Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('settings_notifications'.tr()),
-              ),
-              Switch(
-                value: _isNotificationsEnabled,
-                onChanged: (bool value) {
-                  _setNotifications(value);
-                },
-              ),
-            ],
-          ),
-
-          // Dark mode Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('settings_dark_mode'.tr()),
-              ),
-              Switch(
-                value: themeProvider.isDarkMode,
-                onChanged: (value) {
-                  themeProvider.toggleTheme(value);
-                  viewModel.setDarkModeOn(value);
-                },
-              ),
-            ],
-          ),
-
-          // Family Members Section
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text('settings_family_members_title'.tr()),
-          ),
-
-          // Input fields for adding family members
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _nameController,
-                  decoration: InputDecoration(
-                    labelText: 'settings_family_members_name'.tr(),
                   ),
                 ),
-                TextField(
-                  controller: _ageController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'settings_family_members_age'.tr(),
+                // Notifications Row
+                const Divider(),
+                ListTile(
+                  title: Text('settings_notifications'.tr()),
+                  trailing: Switch(
+                    value: _isNotificationsEnabled,
+                    onChanged: (bool value) {
+                      _setNotifications(value);
+                    },
                   ),
                 ),
-                // Gender Dropdown - Updated to use translation keys
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text('settings_family_members_gender_title'.tr()),
-                ),
-                DropdownButton<String>(
-                  value: _selectedGender,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedGender = newValue!;
-                    });
-                  },
-                  items:
-                      <String>['0', '1'].map<DropdownMenuItem<String>>((
-                        String value,
-                      ) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text('settings_sex_$value'.tr()),
-                        );
-                      }).toList(),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _addFamilyMember,
-                  child: Text('settings_add_family_member'.tr()),
+                // Dark Mode Row
+                const Divider(),
+                ListTile(
+                  title: Text('settings_dark_mode'.tr()),
+                  trailing: Switch(
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.toggleTheme(value);
+                      viewModel.setDarkModeOn(value);
+                    },
+                  ),
                 ),
               ],
             ),
           ),
 
           // Display list of family members
-          ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: household.length,
-            itemBuilder: (context, index) {
-              final member = household[index];
-              return ListTile(
-                title: Text('${member['name']}'),
-                subtitle: Text(
-                  '${'settings_sex_${member['sex']}'.tr()}, ${DateTime.now().year - (member['birthYear'] as int)} ',
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => _removeFamilyMember(member['id'].toString()),
-                ),
-              );
-            },
+          Card(
+            margin: const EdgeInsets.all(12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings_family_members_title'.tr(),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: household.length,
+                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    itemBuilder: (context, index) {
+                      final member = household[index];
+                      return _buildFamilyMemberTile(member);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Add family members
+          Card(
+            margin: const EdgeInsets.all(12),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'settings_add_family_member'.tr(),
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      labelText: 'settings_family_members_name'.tr(),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _ageController,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'settings_family_members_age'.tr(),
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text('settings_family_members_gender_title'.tr()),
+                  DropdownButton<String>(
+                    value: _selectedGender,
+                    isExpanded: true,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedGender = newValue!;
+                      });
+                    },
+                    items: <String>['0', '1'].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text('settings_sex_$value'.tr()),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: _addFamilyMember,
+                      icon: const Icon(Icons.person_add),
+                      label: Text('settings_add_family_member'.tr()),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
