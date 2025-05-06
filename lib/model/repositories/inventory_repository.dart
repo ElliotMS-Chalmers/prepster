@@ -1,5 +1,4 @@
 import 'package:prepster/model/entities/pantry_item.dart';
-import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:uuid/uuid.dart';
 import 'package:prepster/utils/logger.dart';
 
