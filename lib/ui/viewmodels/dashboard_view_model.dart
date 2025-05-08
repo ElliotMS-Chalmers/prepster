@@ -3,12 +3,15 @@ import 'package:prepster/model/repositories/settings_repository.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 import 'package:prepster/ui/viewmodels/settings_view_model.dart';
 import '../../model/entities/pantry_item.dart';
+import '../../utils/calorie_calculator.dart';
+import '../../utils/logger.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   final PantryViewModel? _pantryVM;
   final SettingsViewModel? _settingsVM;
   List<PantryItem> _items = [];
   List<Map<String, Object>> _household = [];
+  LifeQuality _selectedLifeQuality = LifeQuality.medium;
 
   DashboardViewModel(this._pantryVM, this._settingsVM) {
     if (_pantryVM != null && _settingsVM != null) {
@@ -62,6 +65,14 @@ class DashboardViewModel extends ChangeNotifier {
     Map<String, double> total = {"calories": totalcalories, "carbs": totalCarbs, "protein": totalProtein, "fat": totalFat};
 
     return total;
+  }
+
+  LifeQuality get selectedLifeQuality => _selectedLifeQuality;
+
+  void updateLifeQuality(LifeQuality newLifeQuality) {
+    _selectedLifeQuality = newLifeQuality;
+    logger.i('Life quality set to ${newLifeQuality.name}');
+    notifyListeners();
   }
 
   @override

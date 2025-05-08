@@ -5,6 +5,7 @@ import 'package:prepster/ui/pages/dashboard/pie_chart.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/calorie_calculator.dart';
 import 'household_list_item.dart';
 
 
@@ -66,6 +67,33 @@ class DashboardPage extends StatelessWidget {
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 8),
+                      ToggleButtons(
+                        isSelected: [
+                          viewModel.selectedLifeQuality == LifeQuality.low,
+                          viewModel.selectedLifeQuality == LifeQuality.medium,
+                          viewModel.selectedLifeQuality == LifeQuality.high,
+                        ],
+                        onPressed: (index) {
+                          if (index == 0) {
+                            viewModel.updateLifeQuality(LifeQuality.low);
+                          } else if (index == 1) {
+                            viewModel.updateLifeQuality(LifeQuality.medium);
+                          } else if (index == 2) {
+                            viewModel.updateLifeQuality(LifeQuality.high);
+                          }
+                        },
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        constraints: const BoxConstraints(
+                          minWidth: 125.0,
+                          minHeight: 40.0,
+                        ),
+                        children: const [
+                          Text('Low'),
+                          Text('Medium'),
+                          Text('High'),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
                       if (household.isNotEmpty)
                         ListView.builder(
                           shrinkWrap: true,
