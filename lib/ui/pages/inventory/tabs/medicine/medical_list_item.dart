@@ -26,8 +26,7 @@ class MedicalListItem extends StatelessWidget {
       DateTime? date,
       ) async {
 
-
-    onEdit(id, ItemType.medicalItem, name, int.parse(amount!), date, item.excludeFromDateTracker);
+    onEdit(id, ItemType.medicalItem, name, int.tryParse(amount ?? ""), date, item.excludeFromDateTracker);
   }
 
   void displayDialogPopup(BuildContext context) {

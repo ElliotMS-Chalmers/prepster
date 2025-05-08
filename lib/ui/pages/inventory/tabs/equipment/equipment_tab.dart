@@ -22,8 +22,19 @@ class EquipmentTab extends StatelessWidget {
             itemBuilder: (context, index) {
               EquipmentItem item = items[index];
               return EquipmentListItem(
-                item: item,
-                onDelete: (i) => viewModel.deleteItem(i),
+                  item: item,
+                  id: item.id,
+                  onDelete: (i) => viewModel.deleteItem(i),
+                  onEdit: (id, itemType, name, amount, date, excludeFromDateTracker) {
+                    viewModel.updateItem(
+                        id: id,
+                        itemType: itemType,
+                        name: name,
+                        amount: amount,
+                        expirationDate: date,
+                        excludeFromDateTracker: excludeFromDateTracker
+                    );
+                  }
               );
             },
           ),
