@@ -143,7 +143,7 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: const Icon(Icons.bar_chart),
             label: 'bottom_nav_home'.tr(),
           ),
           BottomNavigationBarItem(
