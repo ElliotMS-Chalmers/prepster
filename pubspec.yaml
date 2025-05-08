@@ -72,7 +72,6 @@ flutter:
   uses-material-design: true
   
   assets:
-    - lib/ui/pages/assets/piechart-placeholder.png
     - assets/translations/
     - assets/resources/ # This is for pdf files used by resources section of the app
   # To add assets to your application, add an assets section, like this:
