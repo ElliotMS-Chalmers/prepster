@@ -1,17 +1,49 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:prepster/model/entities/medical_item.dart';
 
+import '../../../../../model/repositories/inventory_repository.dart';
 import '../../../../widgets/list_item.dart';
+import '../../new_medical_item_dialog_popup.dart';
 
 class MedicalListItem extends StatelessWidget {
   final MedicalItem item;
+  final String id;
   final void Function(String itemId) onDelete;
+  final void Function(String itemId, ItemType itemType, String name, int? amount, DateTime? expirationDate, bool? excludeFromDateTracker) onEdit;
 
   const MedicalListItem({
     super.key,
     required this.item,
+    required this.id,
     required this.onDelete,
+    required this.onEdit
   });
+
+  void editItem(
+      String name,
+      String? amount,
+      DateTime? date,
+      ) async {
+
+
+    onEdit(id, ItemType.medicalItem, name, int.parse(amount!), date, item.excludeFromDateTracker);
+  }
+
+  void displayDialogPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => NewMedicalItemDialogPopup(
+        textController1: TextEditingController(text: item.name),
+        textController2: TextEditingController(text: item.amount?.toString() ?? ''),
+        selectedDate: item.expirationDate,
+        onSubmit: (name, amount, date) {
+          editItem(name, amount, date);
+          //Navigator.of(context).pop(); // close the dialog
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +78,23 @@ class MedicalListItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 8),
-          Text(
-            "${item.amount}",
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${item.amount}",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(width: 8),
+              FloatingActionButton.small(
+                onPressed: () => displayDialogPopup(context),
+                tooltip: 'edit_button'.tr(),
+                child: const Icon(Icons.edit),
+              ),
+            ],
           ),
         ],
       ),

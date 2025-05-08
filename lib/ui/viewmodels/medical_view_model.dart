@@ -20,4 +20,23 @@ class MedicalViewModel extends InventoryViewModel<MedicalItem> {
     );
     await loadItems();
   }
+
+  Future<void> updateItem({
+    required String id, //Identifier that will be used for service
+    required ItemType itemType,
+    required String name,
+    int? amount,
+    DateTime? expirationDate,
+    bool? excludeFromDateTracker,
+  }) async {
+    await repository.updateItem(
+      id: id,
+      itemType: itemType,
+      name: name,
+      amount: amount,
+      expirationDate: expirationDate,
+      excludeFromDateTracker: excludeFromDateTracker,
+    );
+    await loadItems();
+  }
 }

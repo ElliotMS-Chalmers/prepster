@@ -76,7 +76,7 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
 
   void _addMedicalItem(
       String name,
-      String amount,
+      String? amount,
       DateTime? date,
       ) {
     final medicalViewModel = Provider.of<MedicalViewModel>(
@@ -84,9 +84,11 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
       listen: false,
     );
 
+    final parsedAmount = int.tryParse(amount ?? "");
+
     medicalViewModel.addItem(
       name: name,
-      amount: int.parse(amount),
+      amount: parsedAmount,
       expirationDate: date
     );
 
@@ -94,7 +96,7 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
 
   void _addEquipmentItem(
       String name,
-      String amount,
+      String? amount,
       DateTime? date,
       ) {
     final equipmentViewModel = Provider.of<EquipmentViewModel>(
@@ -102,9 +104,11 @@ class _InventoryPageState extends State<InventoryPage> with TickerProviderStateM
       listen: false,
     );
 
+    final parsedAmount = int.tryParse(amount ?? "");
+
     equipmentViewModel.addItem(
         name: name,
-        amount: int.parse(amount),
+        amount: parsedAmount,
         expirationDate: date
     );
 
