@@ -24,7 +24,7 @@
   "equipment_tab_name": "Verktyg",
   "settings_language_list": "Språk",
   "settings_dark_mode": "Mörkt tema",
-  "settings_notifications": "Notifikationer",
+  "settings_notifications": "Påminnelser",
   "settings_family_members_title": "Familjemedlemmar",
   "settings_family_members_name": "Namn",
   "settings_family_members_age": "Ålder",
@@ -32,6 +32,8 @@
   "settings_family_members_gender_list_male": "Man",
   "settings_family_members_gender_list_female": "Kvinna",
   "settings_add_family_member": "Lägg till familjemedlem",
+  "settings_notify_days_before": "Påminnelsedagar",
+  "settings_notify_days_before_description": "Antal dagar innan utgångsdatum",
   "settings_sex_0": "Kvinna",
   "settings_sex_1": "Man",
 
