@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import 'package:flutter/material.dart';
 import 'package:prepster/ui/pages/dashboard/pie_chart.dart';
+import 'package:prepster/ui/pages/dashboard/pie_chart_legend.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -35,36 +36,46 @@ class DashboardPage extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                          height: 250,
-                          child: MacronutrientPieChart(
-                            carbs: totalAmountPantry["carbs"]!,
-                            protein: totalAmountPantry["protein"]!,
-                            fat: totalAmountPantry["fat"]!,
-                          )
+                        height: 300,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            MacronutrientPieChart(
+                              carbs: totalAmountPantry["carbs"]!,
+                              protein: totalAmountPantry["protein"]!,
+                              fat: totalAmountPantry["fat"]!,
+                            ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              spacing: 0,
+                              children: [
+                                Text(
+                                  '${totalAmountPantry["calories"]!.round()} kcal',
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                                Text(
+                                  'Total',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ]
+                        )
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'dashboard_pantry_title'.tr(),
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '${'total_calorie_text'.tr()}${totalAmountPantry["calories"]!.round()} kcal',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        '${'total_carbs_text'.tr()}${totalAmountPantry["carbs"]!.round()} g',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        '${'total_protein_text'.tr()}${totalAmountPantry["protein"]!.round()} g',
-                        style: const TextStyle(fontSize: 16),
-                      ),
-                      Text(
-                        '${'total_fat_text'.tr()}${totalAmountPantry["fat"]!.round()} g',
-                        style: const TextStyle(fontSize: 16),
+                      const SizedBox(height: 8),
+                      PieChartLegend(
+                        items: [
+                          LegendItem(color: Colors.cyan, label: 'total_carbs_text'.tr(), value: totalAmountPantry["carbs"]!.round()),
+                          LegendItem(color: Colors.redAccent, label: 'total_protein_text'.tr(), value: totalAmountPantry["protein"]!.round()),
+                          LegendItem(color: Colors.amber, label: 'total_fat_text'.tr(), value: totalAmountPantry["fat"]!.round()),
+                        ],
                       ),
                       const SizedBox(height: 8),
                       ToggleButtons(
