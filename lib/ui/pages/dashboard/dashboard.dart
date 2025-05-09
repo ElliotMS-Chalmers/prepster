@@ -133,9 +133,11 @@ class DashboardPage extends StatelessWidget {
 
                             // Pass the formatted sex and age to the list item
                             return HouseholdListItem(
+                                memberId: member["id"] as String,
                                 name: name,
                                 age: age,
-                                sex: sex != null ? 'settings_sex_$sex'.tr() : null
+                                sex: sex != null ? 'settings_sex_$sex'.tr() : null,
+                                onCheckboxChanged: (id, value) => viewModel.changeExcludeConsumption(id, value!),
                             );
                           },
                         )

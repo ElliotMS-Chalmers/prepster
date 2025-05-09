@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:prepster/model/repositories/settings_repository.dart';
 import 'package:prepster/ui/viewmodels/pantry_view_model.dart';
 import 'package:prepster/ui/viewmodels/settings_view_model.dart';
 import '../../model/entities/pantry_item.dart';
@@ -13,6 +12,7 @@ class DashboardViewModel extends ChangeNotifier {
   List<Map<String, Object>> _household = [];
   LifeQuality _selectedLifeQuality = LifeQuality.medium;
   int _totalHouseholdCalories = 0;
+  List<String> excludeFromConsumptionTracker = [];
 
   DashboardViewModel(this._pantryVM, this._settingsVM) {
     if (_pantryVM != null && _settingsVM != null) {
@@ -59,16 +59,17 @@ class DashboardViewModel extends ChangeNotifier {
   Future<int> _calculateTotalHouseholdCaloriesInternal() async {
     int consumption = 0;
     for (var member in _household) {
-      final sex = member['sex'] == 0 ? Gender.female : Gender.male;
-      final age = member['birthYear'] as int;
-      final calories = CaloriesCalculator().calculateCalories(
-        gender: sex,
-        age: DateTime.now().year - age,
-        lifeQuality: _selectedLifeQuality,
-      );
-      consumption += await calories;
+      if (excludeFromConsumptionTracker.contains(member["id"] as String)) {
+        final sex = member['sex'] == 0 ? Gender.female : Gender.male;
+        final age = member['birthYear'] as int;
+        final calories = CaloriesCalculator().calculateCalories(
+          gender: sex,
+          age: DateTime.now().year - age,
+          lifeQuality: _selectedLifeQuality,
+        );
+        consumption += await calories;
+      }
     }
-    logger.i('Total household calories needed per day is: $consumption for ${_household.length} members with life quality set to ${_selectedLifeQuality.name}.');
     return consumption;
   }
 
@@ -101,6 +102,16 @@ class DashboardViewModel extends ChangeNotifier {
     _calculateHouseholdCalories();
     logger.i('Life quality set to ${newLifeQuality.name}');
     notifyListeners();
+  }
+
+  void changeExcludeConsumption(String id, bool newValue) {
+    if (newValue == true) {
+      excludeFromConsumptionTracker.add(id);
+    }
+    else {
+      excludeFromConsumptionTracker.remove(id);
+    }
+    _calculateHouseholdCalories();
   }
 
   @override
