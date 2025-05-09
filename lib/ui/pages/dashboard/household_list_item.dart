@@ -5,7 +5,7 @@ class HouseholdListItem extends StatefulWidget {
   final String name;
   final int? age;
   final String? sex;
-  final void Function(String, bool?) onCheckboxChanged; // Added callback function
+  final void Function(String, bool?) onCheckboxChanged;
   final bool initialValue;
 
   const HouseholdListItem({
@@ -14,7 +14,7 @@ class HouseholdListItem extends StatefulWidget {
     required this.name,
     this.age,
     this.sex,
-    required this.onCheckboxChanged, // Make the callback optional
+    required this.onCheckboxChanged,
     this.initialValue = true,
   });
 
@@ -50,9 +50,9 @@ class _HouseholdListItemState extends State<HouseholdListItem> {
       elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Row( // Changed to a Row
+        child: Row(
           children: [
-            Expanded( // Wrap the text part in an Expanded widget
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -79,7 +79,7 @@ class _HouseholdListItemState extends State<HouseholdListItem> {
                 setState(() {
                   isChecked = newValue ?? true; // Handle null newValue
                 });
-                widget.onCheckboxChanged(widget.memberId, newValue); // Call the callback
+                widget.onCheckboxChanged(widget.memberId, newValue);
               },
             ),
           ],
