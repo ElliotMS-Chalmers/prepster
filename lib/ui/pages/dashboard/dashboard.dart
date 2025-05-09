@@ -20,6 +20,12 @@ class DashboardPage extends StatelessWidget {
         Map<String, double> totalAmountPantry = viewModel.calculateTotalPantry();
         double totalMacros = totalAmountPantry["carbs"]! + totalAmountPantry["protein"]! + totalAmountPantry["fat"]!;
         List<Map<String, Object>> household = viewModel.getHousehold();
+        int totalConsumption = viewModel.totalHouseholdCalories;
+
+        double daysUntilEmpty = 0.0;
+        if (totalConsumption > 0 && totalAmountPantry["calories"]! > 0) {
+          daysUntilEmpty = totalAmountPantry["calories"]! / totalConsumption;
+        }
 
         return Scaffold(
           appBar: AppBar(
@@ -104,6 +110,12 @@ class DashboardPage extends StatelessWidget {
                           Text('High'),
                         ],
                       ),
+                      const SizedBox(height: 8),
+
+                      Text(
+                        "Estimated time until pantry runs out: ${daysUntilEmpty.round()} days"
+                      ),
+
                       const SizedBox(height: 16),
                       if (household.isNotEmpty)
                         ListView.builder(

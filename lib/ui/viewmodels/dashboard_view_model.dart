@@ -12,6 +12,7 @@ class DashboardViewModel extends ChangeNotifier {
   List<PantryItem> _items = [];
   List<Map<String, Object>> _household = [];
   LifeQuality _selectedLifeQuality = LifeQuality.medium;
+  int _totalHouseholdCalories = 0;
 
   DashboardViewModel(this._pantryVM, this._settingsVM) {
     if (_pantryVM != null && _settingsVM != null) {
@@ -20,11 +21,13 @@ class DashboardViewModel extends ChangeNotifier {
       _updateDashboardItems();
       _loadItems();
       _loadHousehold();
+      _calculateHouseholdCalories();
     }
   }
 
   List<PantryItem> getAllItems() => _items;
   List<Map<String, Object>> getHousehold() => _household;
+  int get totalHouseholdCalories => _totalHouseholdCalories;
 
   void _loadItems() {
     _items = _pantryVM!.getAllItems() as List<PantryItem>;
@@ -37,12 +40,36 @@ class DashboardViewModel extends ChangeNotifier {
       // Access the latest data from PantryViewModel
       _loadItems();
       _loadHousehold();
+      _calculateHouseholdCalories();
+      notifyListeners();
     }
   }
 
   void _loadHousehold() {
     _household = _settingsVM!.getHousehold();
+    _calculateHouseholdCalories();
     notifyListeners();
+  }
+
+  Future<void> _calculateHouseholdCalories() async {
+    _totalHouseholdCalories = await _calculateTotalHouseholdCaloriesInternal();
+    notifyListeners();
+  }
+
+  Future<int> _calculateTotalHouseholdCaloriesInternal() async {
+    int consumption = 0;
+    for (var member in _household) {
+      final sex = member['sex'] == 0 ? Gender.female : Gender.male;
+      final age = member['birthYear'] as int;
+      final calories = CaloriesCalculator().calculateCalories(
+        gender: sex,
+        age: DateTime.now().year - age,
+        lifeQuality: _selectedLifeQuality,
+      );
+      consumption += await calories;
+    }
+    logger.i('Total household calories needed per day is: $consumption for ${_household.length} members with life quality set to ${_selectedLifeQuality.name}.');
+    return consumption;
   }
 
   Map<String, double> calculateTotalPantry() {
@@ -71,6 +98,7 @@ class DashboardViewModel extends ChangeNotifier {
 
   void updateLifeQuality(LifeQuality newLifeQuality) {
     _selectedLifeQuality = newLifeQuality;
+    _calculateHouseholdCalories();
     logger.i('Life quality set to ${newLifeQuality.name}');
     notifyListeners();
   }
