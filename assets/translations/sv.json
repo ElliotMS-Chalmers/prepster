@@ -40,5 +40,6 @@
   "permission_permanently_denied_message": "Behörighet för notiser är permanent nekad. Vänligen aktivera den i appinställningarna för att tillåta notiser.",
   "ok_button": "OK",
   "open_settings_button": "Öppna inställningar",
-  "edit_button": "Redigera"
+  "edit_button": "Redigera",
+  "API_Search_Results_for": "Sök resultat för "
 }
