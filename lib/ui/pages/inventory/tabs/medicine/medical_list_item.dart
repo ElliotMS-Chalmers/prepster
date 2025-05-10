@@ -47,56 +47,15 @@ class MedicalListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return ListItem(
       id: item.id,
-      onDismissed: onDelete,
-      headerContent: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                item.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              Text(
-                item.expirationDate != null
-                    ? item.expirationDate!.toString().split(" ")[0]
-                    : "",
-                style: TextStyle(
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${item.amount}",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(width: 8),
-              FloatingActionButton.small(
-                onPressed: () => displayDialogPopup(context),
-                tooltip: 'edit_button'.tr(),
-                child: const Icon(Icons.edit),
-              ),
-            ],
-          ),
-        ],
-      ),
+      title: item.name,
+      secondary_text: item.amount.toString(),
+      onDelete: onDelete,
+      onEdit: () => displayDialogPopup(context),
+      details: {
+        'Expiration date': item.expirationDate != null ? item.expirationDate!.toString().split(" ")[0] : "None",
+      },
     );
   }
 }

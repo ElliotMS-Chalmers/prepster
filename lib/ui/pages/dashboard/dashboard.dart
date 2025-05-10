@@ -75,7 +75,7 @@ class DashboardPage extends StatelessWidget {
                           ]
                         )
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       PieChartLegend(
                         items: [
                           LegendItem(color: Colors.cyan, label: 'total_carbs_text'.tr(), value: totalAmountPantry["carbs"]!.round()),
@@ -83,7 +83,7 @@ class DashboardPage extends StatelessWidget {
                           LegendItem(color: Colors.amber, label: 'total_fat_text'.tr(), value: totalAmountPantry["fat"]!.round()),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
                       ToggleButtons(
                         isSelected: [
                           viewModel.selectedLifeQuality == LifeQuality.low,
@@ -110,12 +110,10 @@ class DashboardPage extends StatelessWidget {
                           Text('High'),
                         ],
                       ),
-                      const SizedBox(height: 8),
-
+                      const SizedBox(height: 16),
                       Text(
                         "Estimated time until pantry runs out: ${daysUntilEmpty.round()} days"
                       ),
-
                       const SizedBox(height: 16),
                       if (household.isNotEmpty)
                         ListView.builder(

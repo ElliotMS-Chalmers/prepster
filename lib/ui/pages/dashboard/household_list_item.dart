@@ -33,19 +33,24 @@ class _HouseholdListItemState extends State<HouseholdListItem> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     Color getColor(Set<WidgetState> states) {
       const Set<WidgetState> interactiveStates = <WidgetState>{
         WidgetState.pressed,
         WidgetState.hovered,
         WidgetState.focused,
       };
+
       if (states.any(interactiveStates.contains)) {
-        return Colors.blue;
+        return colorScheme.primary;
       }
-      return Colors.red;
+
+      return colorScheme.primary;
     }
 
     return Card(
+      color: Theme.of(context).colorScheme.surfaceContainer,
       margin: const EdgeInsets.symmetric(vertical: 4),
       elevation: 2,
       child: Padding(
