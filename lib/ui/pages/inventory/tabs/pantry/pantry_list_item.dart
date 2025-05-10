@@ -88,75 +88,20 @@ class PantryListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return ListItem(
       id: item.id,
-      onDismissed: onDelete,
-      headerContent: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                item.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              Text(
-                item.expirationDate != null
-                    ? item.expirationDate!.toString().split(" ")[0]
-                    : "",
-                style: TextStyle(
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "${item.weightKg ?? 0} kg",
-                style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
-              ),
-              const SizedBox(width: 8),
-              FloatingActionButton.small(
-                onPressed: () => displayDialogPopup(context),
-                tooltip: 'edit_button'.tr(),
-                child: const Icon(Icons.edit),
-              ),
-            ],
-          ),
-        ],
-      ),
-      expandedContent: Row(
-        children: [
-          Text(
-            (item.calories100g != null && item.weightKg != null)
-                ? "${(item.calories100g! * item.weightKg! * 10).toStringAsFixed(1)} kcal"
-                : "",
-            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)}g carbs",
-          ),
-          const SizedBox(width: 8),
-          Text(
-            "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)}g protein",
-          ),
-          const SizedBox(width: 8),
-          Text(
-            "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)}g fat",
-          ),
-        ],
-      ),
+      title: item.name,
+      secondary_text: "${item.weightKg} kg",
+      onDelete: onDelete,
+      onEdit: () => displayDialogPopup(context),
+      details: {
+        'Expiration date': item.expirationDate != null ? item.expirationDate!.toString().split(" ")[0] : "None",
+        'Carbs': "${(item.categories![FoodCategory.carbohydrate]! * item.weightKg! * 10).toStringAsFixed(1)} g",
+        'Protein': "${(item.categories![FoodCategory.protein]! * item.weightKg! * 10).toStringAsFixed(1)} g",
+        'Fat': "${(item.categories![FoodCategory.fat]! * item.weightKg! * 10).toStringAsFixed(1)} g",
+        'Calories': "${(item.calories100g! * item.weightKg! * 10).toStringAsFixed(1)} kcal",
+        'Quantity': item.amount.toString()
+      },
     );
   }
 }
