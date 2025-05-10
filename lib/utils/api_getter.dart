@@ -1,9 +1,25 @@
+import 'dart:ffi';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:prepster/model/repositories/settings_repository.dart';
+import 'package:prepster/model/services/settings_service.dart';
+
 
 class ApiGetter {
+
+  Future<int> fetchLanguage() async {
+    SettingsRepository settings = SettingsRepository(SettingsService.instance);
+    String language = await settings.getSelectedLanguage() ?? settings.getFallbackLanguage();
+    if (language == 'sv') {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
+
   Future<String> fetchFoodById(int id) async {
-    final url = Uri.parse('https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel/$id');
+    final url = Uri.parse('https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel/$id?sprak=${await fetchLanguage()}');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -14,20 +30,32 @@ class ApiGetter {
   }
 
   Future<Map<String, double?>> fetchNutrientById(int id) async {
-    final url = Uri.parse('https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel/$id/naringsvarden');
+    final url = Uri.parse('https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel/$id/naringsvarden?sprak=${await fetchLanguage()}');
     final Map<String, double?> result = {};
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       for (var item in data) {
-        if (item['namn'] == 'Energi (kcal)') {
-          result['Energi'] = item['varde'].toDouble();
-        } else if (item['namn'] == 'Fett, totalt') {
-          result['Fett'] = item['varde'];
-        } else if (item['namn'] == 'Kolhydrater, tillgängliga') {
-          result['Kolhydrater'] = item['varde'];
-        } else if (item['namn'] == 'Protein') {
-          result['Protein'] = item['varde'];
+        if (await fetchLanguage() == 1) {
+          if (item['namn'] == 'Energi (kcal)') {
+            result['Energi'] = item['varde'].toDouble();
+          } else if (item['namn'] == 'Fett, totalt') {
+            result['Fett'] = item['varde'];
+          } else if (item['namn'] == 'Kolhydrater, tillgängliga') {
+            result['Kolhydrater'] = item['varde'];
+          } else if (item['namn'] == 'Protein') {
+            result['Protein'] = item['varde'];
+          }
+        } else {
+          if (item['namn'] == 'Energy (kcal)') {
+            result['Energi'] = item['varde'].toDouble();
+          } else if (item['namn'] == 'Fat, total') {
+            result['Fett'] = item['varde'];
+          } else if (item['namn'] == 'Carbohydrates, available') {
+            result['Kolhydrater'] = item['varde'];
+          } else if (item['namn'] == 'Protein') {
+            result['Protein'] = item['varde'];
+          }
         }
       }
     } else {
@@ -39,7 +67,7 @@ class ApiGetter {
   Future<List<int>> fetchFoodIdsByName(String foodName) async {
     int limit = 2500; // returns all items
     final url = Uri.parse(
-        'https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel?limit=$limit');
+        'https://dataportal.livsmedelsverket.se/livsmedel/api/v1/livsmedel?limit=$limit&sprak=${await fetchLanguage()}');
 
     final response = await http.get(url);
 
