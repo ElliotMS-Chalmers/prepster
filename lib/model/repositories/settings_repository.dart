@@ -7,8 +7,6 @@ import 'package:prepster/model/services/settings_service.dart';
 import 'package:prepster/utils/default_settings.dart';
 import 'package:prepster/utils/logger.dart';
 
-
-
 class SettingsRepository {
   final SettingsService _settingsService;
 
@@ -42,9 +40,7 @@ class SettingsRepository {
       _notificationsEnabled = await _settingsService.getValue<bool>(
         _notificationKey,
       );
-      _darkModeEnabled = await _settingsService.getValue<bool>(
-        _darkModeKey,
-      );
+      _darkModeEnabled = await _settingsService.getValue<bool>(_darkModeKey);
       _notifyDaysBefore = await _settingsService.getValue<int>(
         _notifyDaysBeforeKey,
       );
@@ -67,10 +63,8 @@ class SettingsRepository {
       return cachedValue;
     }
     final fetchedValue = await _fetchAndCache<int>(
-      _notifyDaysBeforeKey,
-      int.parse(DEFAULT_NOTIFY_DAYS_BEFORE),
-    );
-    return fetchedValue ?? int.parse(DEFAULT_NOTIFY_DAYS_BEFORE); // Added null-aware fallback
+      _notifyDaysBeforeKey, DEFAULT_NOTIFY_DAYS_BEFORE);
+    return fetchedValue ?? DEFAULT_NOTIFY_DAYS_BEFORE;
   }
 
   Future<void> setNotifications(bool value) async {
@@ -93,13 +87,12 @@ class SettingsRepository {
       _markDirtyAndScheduleSave();
     }
   }
+
   Future<bool> getDarkmodeOn() async {
     return _darkModeEnabled ??
         (await _fetchAndCache(_darkModeKey, DEFAULT_DARKMODE_ENABLED)) ??
         DEFAULT_DARKMODE_ENABLED;
   }
-
-
 
   // Household related
 
@@ -109,13 +102,11 @@ class SettingsRepository {
         <Map<String, Object>>[];
   }
 
-
   Future<String> addHouseholdMember({
     required String name,
     required int birthYear,
     required String sex,
   }) async {
-
     final household = await getHousehold();
     final uuid = const Uuid();
     final newMember = {
@@ -139,7 +130,6 @@ class SettingsRepository {
       _markDirtyAndScheduleSave();
     }
   }
-
 
   // Translation related
 
@@ -190,7 +180,7 @@ class SettingsRepository {
     String? savedLanguageCode = await getSelectedLanguage();
     if (savedLanguageCode != null) {
       logger.d("Saved language: $savedLanguageCode");
-      _language = savedLanguageCode;    // Cache the saved language
+      _language = savedLanguageCode; // Cache the saved language
       return Locale(savedLanguageCode);
     }
 
@@ -201,16 +191,15 @@ class SettingsRepository {
     // Check if the device language is suported
     if (getAvailableLanguages().contains(deviceLanguageCode)) {
       logger.d("Device language: $deviceLanguageCode");
-      _language = deviceLanguageCode;     // Cache the device language
+      _language = deviceLanguageCode; // Cache the device language
       return Locale(deviceLanguageCode);
     }
 
     // If the phone language is not supported (or could not be read), use fallback
     logger.d("Using fallback language: ${getFallbackLanguage()}");
-    _language = getFallbackLanguage();    // Cache the fallback language
+    _language = getFallbackLanguage(); // Cache the fallback language
     return Locale(getFallbackLanguage());
   }
-
 
   // Helper methods for caching and saving
 
@@ -257,10 +246,7 @@ class SettingsRepository {
         );
       }
       if (_darkModeEnabled != null) {
-        await _settingsService.setValue(
-          _darkModeKey,
-          _darkModeEnabled,
-        );
+        await _settingsService.setValue(_darkModeKey, _darkModeEnabled);
       }
       if (_notifyDaysBefore != null) {
         await _settingsService.setValue(

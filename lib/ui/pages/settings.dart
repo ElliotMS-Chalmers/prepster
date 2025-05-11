@@ -31,6 +31,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   late bool _isNotificationsEnabled;
 
+  // For notifyDaysBefore setting
+  late int _notifyDaysBefore;
+  final TextEditingController _notifyDaysBeforeController = TextEditingController();
+
   // Text controllers for adding family members
   TextEditingController _nameController = TextEditingController();
   TextEditingController _ageController = TextEditingController();
@@ -44,10 +48,52 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    _isNotificationsEnabled = false; // default until fetched
+    _isNotificationsEnabled = true; // default until fetched
+    _notifyDaysBefore = 3; // default until fetched
     _loadNotificationSetting();
+    _loadNotifyDaysBefore();
     _selectedLanguage =
         Provider.of<SettingsViewModel>(context, listen: false).selectedLanguage;
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    _notifyDaysBeforeController.dispose();
+    super.dispose();
+  }
+
+  // Load the saved notifyDaysBefore setting
+  Future<void> _loadNotifyDaysBefore() async {
+    final settingsViewModel = Provider.of<SettingsViewModel>(
+      context,
+      listen: false,
+    );
+    final days = await settingsViewModel.getNotifyDaysBefore();
+
+    setState(() {
+      _notifyDaysBefore = days;
+      _notifyDaysBeforeController.text = days.toString();
+    });
+  }
+
+  // Save the notifyDaysBefore setting
+  void _saveNotifyDaysBefore(String value) async {
+    if (value.isEmpty) return;
+
+    int days = int.tryParse(value) ?? 3; // Default to 3 if parsing fails
+    if (days < 0) days = 0; // Ensure non-negative value
+
+    final settingsViewModel = Provider.of<SettingsViewModel>(
+      context,
+      listen: false,
+    );
+
+    await settingsViewModel.setNotifyDaysBefore(days);
+    setState(() {
+      _notifyDaysBefore = days;
+    });
   }
 
   // Function to add a family member
@@ -59,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await settingsViewModel.addHouseholdMember(
       name: _nameController.text,
       birthYear:
-          DateTime.now().year -
+      DateTime.now().year -
           int.parse(_ageController.text), // assuming age is entered
       sex: _selectedGender,
     );
@@ -194,17 +240,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     }).toList(),
                   ),
                 ),
-                // Notifications Row
-                const Divider(),
-                ListTile(
-                  title: Text('settings_notifications'.tr()),
-                  trailing: Switch(
-                    value: _isNotificationsEnabled,
-                    onChanged: (bool value) {
-                      _setNotifications(value);
-                    },
-                  ),
-                ),
                 // Dark Mode Row
                 const Divider(),
                 ListTile(
@@ -217,6 +252,37 @@ class _SettingsPageState extends State<SettingsPage> {
                     },
                   ),
                 ),
+                // Notifications Row
+                const Divider(),
+                ListTile(
+                  title: Text('settings_notifications'.tr()),
+                  trailing: Switch(
+                    value: _isNotificationsEnabled,
+                    onChanged: (bool value) {
+                      _setNotifications(value);
+                    },
+                  ),
+                ),
+                // Notify Days Before Row
+                const Divider(),
+                ListTile(
+                  title: Text('settings_notify_days_before'.tr()),
+                  subtitle: Text('settings_notify_days_before_description'.tr()),
+                  trailing: SizedBox(
+                    width: 60,
+                    child: TextField(
+                      controller: _notifyDaysBeforeController,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                        border: OutlineInputBorder(),
+                      ),
+                      onChanged: _saveNotifyDaysBefore,
+                    ),
+                  ),
+                ),
+
               ],
             ),
           ),

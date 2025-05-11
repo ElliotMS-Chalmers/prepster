@@ -63,7 +63,7 @@ void main() {
       const newNotifyDaysBefore = 7;
       await settingsRepo.setNotifyDaysBefore(newNotifyDaysBefore);
       final notifyDaysBefore = await settingsRepo.getNotifyDaysBefore();
-      expect(notifyDaysBefore, newNotifyDaysBefore.toString());
+      expect(notifyDaysBefore, newNotifyDaysBefore);
     });
 
     test('Initial household is empty', () async {

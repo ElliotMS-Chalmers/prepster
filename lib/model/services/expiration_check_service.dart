@@ -1,16 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import '../../utils/default_settings.dart';
+
 class ExpirationCheckService {
   final String basePath;
   final String filename;
-
-  final int bufferDays = 90;
+  final DateTime? testDate; // Optional for testing
 
   // Filename (for json file) and optional basePath for testing
   ExpirationCheckService(
     this.filename, {
     this.basePath = '/data/data/com.example.prepster/app_flutter/',
+    this.testDate, // for test predictability
   });
 
   // Get the full file path
@@ -32,7 +34,9 @@ class ExpirationCheckService {
       final jsonContent = await file.readAsString();
       final Map<String, dynamic> data = json.decode(jsonContent);
 
-      final today = DateTime.now();
+      // Use testDate if provided (for tests), otherwise use current date
+      final today = testDate ?? DateTime.now();
+
       // Strip time from today for consistent date comparison
       final todayDate = DateTime(today.year, today.month, today.day);
 
@@ -62,9 +66,9 @@ class ExpirationCheckService {
             final int daysUntilExpiration =
                 expirationDate.difference(todayDate).inDays;
 
-            // Include items expiring within notifyDaysBefore days
+            // Include items expiring within notifyDaysBefore days and notification window
             if (daysUntilExpiration >= 0 &&
-                daysUntilExpiration <= notifyDaysBefore+bufferDays) {
+                daysUntilExpiration <= notifyDaysBefore+NOTIFICATION_WINDOW_DAYS) {
               // Convert expirationDate to YYYY-MM-DD string
               final String expirationDateString =
                   expirationDate.toString().split(' ')[0];
@@ -87,7 +91,6 @@ class ExpirationCheckService {
 
       return expiringItems;
     } catch (e) {
-      // TODO handle errors
       return [];
     }
   }

@@ -7,6 +7,7 @@ import 'package:prepster/model/services/pantry_json_storage_service.dart';
 import 'package:prepster/ui/viewmodels/dashboard_view_model.dart';
 import 'package:prepster/ui/viewmodels/equipment_view_model.dart';
 import 'package:prepster/ui/viewmodels/medical_view_model.dart';
+import 'package:prepster/utils/default_settings.dart';
 
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -38,13 +39,10 @@ void main() async {
   final themeProvider = ThemeProvider(settings);
   await themeProvider.loadTheme();
 
-  if (await settings.getNotificationsEnabled()){
-    // Add more storage to scan for expiration dates here
-    var storageFiles = {'pantry_data.json'};
-    var notifyDaysBefore = await settings.getNotifyDaysBefore();
-    // var notifyDaysBefore = 3; // For testing purposes
-    NotificationService(storageFiles, notifyDaysBefore);
-  }
+  var notificationsEnabled = await settings.getNotificationsEnabled();
+  var notifyDaysBefore = await settings.getNotifyDaysBefore();
+  NotificationService(STORAGE_FILES, notifyDaysBefore, notificationsEnabled);
+
 
 
   runApp(

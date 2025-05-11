@@ -36,7 +36,6 @@
   "settings_notify_days_before_description": "Antal dagar innan utgångsdatum",
   "settings_sex_0": "Kvinna",
   "settings_sex_1": "Man",
-
   "permission_required_title": "Behörighet krävs",
   "permission_denied_message": "Behörighet för notiser nekades. Notiser kommer att vara inaktiverade.",
   "permission_permanently_denied_message": "Behörighet för notiser är permanent nekad. Vänligen aktivera den i appinställningarna för att tillåta notiser.",

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -73,15 +71,20 @@ class SettingsViewModel extends ChangeNotifier {
     await _loadItems();
   }
 
+
+  Future<int> getNotifyDaysBefore() async {
+    return await _repository.getNotifyDaysBefore();
+  }
+
+  Future<void> setNotifyDaysBefore(int days) async {
+    await _repository.setNotifyDaysBefore(days);
+    notifyListeners();
+  }
+
   Future<bool> getNotifications() async {
     return await _repository.getNotificationsEnabled();
   }
 
-  /*
-  Future<void> setNotifications(bool value) async {
-    await _repository.setNotifications(value);
-  }
-   */
 
   Future<NotificationPermissionResult> setNotifications(bool value) async {
     final notificationsOn = await _repository.getNotificationsEnabled();

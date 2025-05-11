@@ -5,6 +5,7 @@ const int DEFAULT_NOTIFY_DAYS_BEFORE = 30;
 const List<String> SUPPORTED_LANGUAGES = ['en', 'sv'];
 const int MAXIMUM_ALLOWED_NAME_LENGTH = 100;
 const String TIMEZONE = 'Europe/Stockholm';
+const int NOTIFICATION_WINDOW_DAYS = 90;
 
 const String TRANSLATIONS_PATH = 'assets/translations';
 
