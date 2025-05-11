@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:prepster/model/services/settings_service.dart';
@@ -75,17 +73,12 @@ class SettingsRepository {
     return fetchedValue ?? int.parse(DEFAULT_NOTIFY_DAYS_BEFORE); // Added null-aware fallback
   }
 
-
-
   Future<void> setNotifications(bool value) async {
     if (_notificationsEnabled != value) {
       _notificationsEnabled = value;
       _markDirtyAndScheduleSave();
     }
   }
-
-
-
 
   Future<void> setNotifyDaysBefore(int value) async {
     if (_notifyDaysBefore != value) {

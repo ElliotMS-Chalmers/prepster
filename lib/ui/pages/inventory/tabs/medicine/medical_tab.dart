@@ -21,7 +21,18 @@ class MedicalTab extends StatelessWidget {
               MedicalItem item = items[index];
               return MedicalListItem(
                 item: item,
+                id: item.id,
                 onDelete: (i) => viewModel.deleteItem(i),
+                onEdit: (id, itemType, name, amount, date, excludeFromDateTracker) {
+                  viewModel.updateItem(
+                    id: id,
+                    itemType: itemType,
+                    name: name,
+                    amount: amount,
+                    expirationDate: date,
+                    excludeFromDateTracker: excludeFromDateTracker
+                  );
+                }
               );
             },
           ),

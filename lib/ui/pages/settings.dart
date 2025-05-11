@@ -167,6 +167,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           // Language Row
           Card(
+            color: Theme.of(context).colorScheme.surfaceContainer,
             margin: const EdgeInsets.all(12),
             elevation: 2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -222,6 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Display list of family members
           Card(
+            color: Theme.of(context).colorScheme.surfaceContainer,
             margin: const EdgeInsets.all(12),
             elevation: 2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -252,6 +254,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
           // Add family members
           Card(
+            color: Theme.of(context).colorScheme.surfaceContainer,
             margin: const EdgeInsets.all(12),
             elevation: 2,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

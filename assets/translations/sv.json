@@ -1,7 +1,7 @@
 {
   "app_title": "Prepster",
   "home_page_title": "Startsida",
-  "bottom_nav_home": "Hem",
+  "bottom_nav_home": "Översikt",
   "bottom_nav_inventory": "Förråd",
   "bottom_nav_pantry": "Skafferi",
   "bottom_nav_medical": "Medicin",
@@ -11,9 +11,9 @@
   "tooltip_add_pantry_item": "Lägg till produkt i skafferiet",
   "dashboard_pantry_title": "Översikt av skafferi",
   "total_calorie_text": "Kalorier: ",
-  "total_carbs_text": "Kolhydrater: ",
-  "total_protein_text": "Protein : ",
-  "total_fat_text": "Fett: ",
+  "total_carbs_text": "Kolhydrater",
+  "total_protein_text": "Protein",
+  "total_fat_text": "Fett",
   "dashboard_age": "Ålder: ",
   "dashboard_sex": "Kön: ",
   "dashboard_no_household": "Inga hushållsmedlemmar har lagts till ännu.",
@@ -42,5 +42,6 @@
   "permission_permanently_denied_message": "Behörighet för notiser är permanent nekad. Vänligen aktivera den i appinställningarna för att tillåta notiser.",
   "ok_button": "OK",
   "open_settings_button": "Öppna inställningar",
-  "edit_button": "Redigera"
+  "edit_button": "Redigera",
+  "API_Search_Results_for": "Sök resultat för "
 }

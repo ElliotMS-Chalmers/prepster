@@ -2,16 +2,19 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class NewEquipmentItemDialogPopup extends StatefulWidget {
-  final TextEditingController _textController1 = TextEditingController();
-  final TextEditingController _textController2 = TextEditingController();
+  final TextEditingController textController1;
+  final TextEditingController textController2;
   final DateTime? selectedDate;
-  final void Function(String name, String amount, DateTime? date) onSubmit;
+  final void Function(String name, String? amount, DateTime? date) onSubmit;
 
   NewEquipmentItemDialogPopup({
     super.key,
+    TextEditingController? textController1,
+    TextEditingController? textController2,
     required this.selectedDate,
     required this.onSubmit,
-  });
+  }) :  textController1 = textController1 ?? TextEditingController(),
+        textController2 = textController2 ?? TextEditingController();
 
   @override
   State<NewEquipmentItemDialogPopup> createState() => _NewEquipmentItemDialogPopupState();
@@ -34,11 +37,11 @@ class _NewEquipmentItemDialogPopupState extends State<NewEquipmentItemDialogPopu
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
-            controller: widget._textController1,
+            controller: widget.textController1,
             decoration: const InputDecoration(labelText: 'Name'),
           ),
           TextField(
-            controller: widget._textController2,
+            controller: widget.textController2,
             decoration: const InputDecoration(labelText: 'Amount'),
           ),
           TextFormField(
@@ -77,11 +80,10 @@ class _NewEquipmentItemDialogPopupState extends State<NewEquipmentItemDialogPopu
         ),
         ElevatedButton(
           onPressed: () {
-            if (widget._textController1.text.isNotEmpty &&
-                widget._textController2.text.isNotEmpty) {
+            if (widget.textController1.text.isNotEmpty) {
               widget.onSubmit(
-                widget._textController1.text,
-                widget._textController2.text,
+                widget.textController1.text,
+                widget.textController2.text,
                 _selectedDate,
               );
               Navigator.pop(context);

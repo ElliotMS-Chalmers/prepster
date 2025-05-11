@@ -1,7 +1,7 @@
 {
   "app_title": "Prepster",
   "home_page_title": "Home Page",
-  "bottom_nav_home": "Home",
+  "bottom_nav_home": "Overview",
   "bottom_nav_inventory": "Inventory",
   "bottom_nav_pantry": "Pantry",
   "bottom_nav_medical": "Medical",
@@ -10,10 +10,10 @@
   "bottom_nav_settings": "Settings",
   "tooltip_add_pantry_item": "Add product to pantry",
   "dashboard_pantry_title": "Pantry Overview",
-  "total_calorie_text": "Calories: ",
-  "total_carbs_text": "Carbohydrates: ",
-  "total_protein_text": "Protein: ",
-  "total_fat_text": "Fat: ",
+  "total_calorie_text": "Calories",
+  "total_carbs_text": "Carbohydrates",
+  "total_protein_text": "Protein",
+  "total_fat_text": "Fat",
   "dashboard_age": "Age: ",
   "dashboard_sex": "Sex: ",
   "dashboard_no_household": "No household members added yet.",
@@ -42,6 +42,6 @@
   "permission_permanently_denied_message": "Notification permission is permanently denied. Please enable it in app settings to allow notifications.",
   "ok_button": "OK",
   "open_settings_button": "Open Settings",
-  "edit_button": "Edit"
-
+  "edit_button": "Edit",
+  "API_Search_Results_for": "Search results for "
 }

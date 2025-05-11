@@ -105,13 +105,11 @@ class InventoryRepository<T extends InventoryItem> {
     await _storageService.addItem(newItem);
   }
 
-  /// Returns a list of all pantry items.
   Future<List<T>> getAllItems() async {
-    final List<T> list = await _storageService.getAllItems() as List<T>;
+    final list = await _storageService.getAllItems();
     logger.i('Successfully called the getAllItems-method and returned a map');
-    return list;
+    return list.map((item) => item as T).toList();
   }
-
 
   /// Returns a specific pantry item.
   Future<T> getItem(int index) async {
