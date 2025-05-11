@@ -58,7 +58,7 @@ class NotificationService {
     await clearAllScheduledNotifications();
 
     _scheduleNotifications();
-    _printPendingNotifications();
+    //_printPendingNotifications();
   }
 
   Future<bool> _requestExactAlarmPermission() async {
@@ -79,7 +79,7 @@ class NotificationService {
   }
 
   void _initializeNotifications() {
-    print('Initializing notifications...');
+    logger.i('Initializing notifications...');
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -122,6 +122,7 @@ class NotificationService {
     logger.i('Notifications map: $notifications');
   }
 
+  /*
   Future<void> _printPendingNotifications() async {
     try {
       final List<PendingNotificationRequest> pending =
@@ -141,6 +142,8 @@ class NotificationService {
       logger.e('Error getting pending notifications: $e');
     }
   }
+
+   */
 
   Future<void> clearAllScheduledNotifications() async {
     try {
@@ -173,13 +176,15 @@ class NotificationService {
       }
 
       // Pass the list of ids to _scheduleOneNotification
-      print('Scheduling notification for date: $parsedDate with IDs: $ids');
+
+      logger.i(
+        'Scheduling notification for date: $parsedDate with IDs: $ids',
+      );
       await _scheduleOneNotification(date, ids);
     }
   }
 
   Future<void> _scheduleOneNotification(String date, List payload) async {
-    print("Scheduling one notification...");
     var notificationId = int.parse(date.replaceAll('-', ''));
 
     //var scheduledTime = _getTimeNow(); // for debugging only
@@ -220,9 +225,11 @@ class NotificationService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: jsonEncode(payload), // payload
       );
-      print('A notification has been scheduled for $scheduledTime');
+      logger.i(
+        'A notification has been scheduled for $scheduledTime',
+      );
     } catch (e) {
-      print('Error scheduling a notification: $e');
+      logger.e('Error scheduling a notification: $e');
     }
   }
 

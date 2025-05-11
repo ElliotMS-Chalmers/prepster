@@ -90,7 +90,7 @@ void main() {
 
     test('Delete a household member by uuid', () async {
       String id1 = await settingsRepo.addHouseholdMember(name: 'John', birthYear: 1994, sex: '1');
-      String id2 = await settingsRepo.addHouseholdMember(name: 'Jane', birthYear:  1990, sex:  '0');
+      String _ = await settingsRepo.addHouseholdMember(name: 'Jane', birthYear:  1990, sex:  '0');
 
       await settingsRepo.deleteHouseholdMember(id1);
 
