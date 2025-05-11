@@ -1,4 +1,3 @@
-/*
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +8,7 @@ import 'package:path/path.dart' as path;
 
 const String _pantryFileName = 'test/model/database/pantry_data_test.json';
 
-class MockJsonStorageService extends Mock implements JsonStorageService {
+class MockPantryJsonStorageService extends Mock implements PantryJsonStorageService {
   final String _testFilePath = path.join(
     Directory.current.path,
     'test',
@@ -54,12 +53,12 @@ class MockJsonStorageService extends Mock implements JsonStorageService {
   Future<List<PantryItem>> getAllItems() async {
     final pantryMap = await _readPantryMap();
     final List<PantryItem> allItemsList =
-        pantryMap.values
-            .map(
-              (itemJson) =>
-                  PantryItem.fromJson(itemJson as Map<String, dynamic>),
-            )
-            .toList();
+    pantryMap.values
+        .map(
+          (itemJson) =>
+          PantryItem.fromJson(itemJson as Map<String, dynamic>),
+    )
+        .toList();
     return allItemsList;
   }
 
@@ -90,8 +89,8 @@ class MockJsonStorageService extends Mock implements JsonStorageService {
 
 void main() {
   group('JsonStorageService Tests', () {
-    final MockJsonStorageService storageService =
-        MockJsonStorageService();
+    final MockPantryJsonStorageService pantryStorageService =
+    MockPantryJsonStorageService();
     late File testFile;
 
     setUp(() async {
@@ -202,7 +201,7 @@ void main() {
         },
       };
 
-      await storageService.addItem(newToiletPaper);
+      await pantryStorageService.addItem(newToiletPaper);
       final fileContents = await testFile.readAsString();
       final decodedJson = jsonDecode(fileContents);
       expect(decodedJson, expectedJson);
@@ -210,8 +209,8 @@ void main() {
 
     test(
       'getAllItems() should return a list of the entire JSON file',
-      () async {
-        final List<PantryItem> actualItems = await storageService.getAllItems();
+          () async {
+        final List<PantryItem> actualItems = await pantryStorageService.getAllItems();
         final expectedItems = [
           PantryItem(
             id: 'apple-id',
@@ -253,8 +252,8 @@ void main() {
 
     test(
       'getItem(id) should return the object associated with the id',
-      () async {
-        PantryItem? returnedObject = await storageService.getItem('apple-id');
+          () async {
+        PantryItem? returnedObject = await pantryStorageService.getItem('apple-id');
         final expectedJson = PantryItem(
           id: 'apple-id',
           name: 'Apple',
@@ -292,11 +291,10 @@ void main() {
           'excludeFromCaloriesTracker': false,
         },
       };
-      await storageService.deleteItem('apple-id');
+      await pantryStorageService.deleteItem('apple-id');
       final fileContents = await testFile.readAsString();
       final decodedJson = jsonDecode(fileContents);
       expect(decodedJson, expectedJson);
     });
   });
 }
-*/
