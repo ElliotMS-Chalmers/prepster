@@ -23,7 +23,7 @@ class HouseholdListItem extends StatefulWidget {
 }
 
 class _HouseholdListItemState extends State<HouseholdListItem> {
-  bool isChecked = false;
+  bool isChecked = true;
 
   @override
   void initState() {

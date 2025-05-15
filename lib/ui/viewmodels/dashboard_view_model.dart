@@ -59,7 +59,7 @@ class DashboardViewModel extends ChangeNotifier {
   Future<int> _calculateTotalHouseholdCaloriesInternal() async {
     int consumption = 0;
     for (var member in _household) {
-      if (excludeFromConsumptionTracker.contains(member["id"] as String)) {
+      if (!excludeFromConsumptionTracker.contains(member["id"] as String)) {
         final sex = member['sex'] == 0 ? Gender.female : Gender.male;
         final age = member['birthYear'] as int;
         final calories = CaloriesCalculator().calculateCalories(
@@ -105,7 +105,7 @@ class DashboardViewModel extends ChangeNotifier {
   }
 
   void changeExcludeConsumption(String id, bool newValue) {
-    if (newValue == true) {
+    if (newValue == false) {
       excludeFromConsumptionTracker.add(id);
     }
     else {
